@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Sistema Acadêmico</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; height: 100vh; overflow: hidden; }
+        
+        .container { display: flex; height: 100vh; }
+
+        /* Painel Esquerdo */
+        .left-panel {
+            flex: 1;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            color: white; padding: 3rem; position: relative;
+        }
+        .left-panel::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 30% 70%, rgba(34, 139, 34, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .logo-section { text-align: center; z-index: 2; margin-bottom: 2rem; }
+        
+        /* LOGO AINDA MAIOR */
+        .logo-container {
+            width: 320px; height: 320px; 
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 0.8rem; 
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+        .logo-container:hover { 
+            transform: scale(1.02);
+            filter: brightness(1.05);
+        }
+
+        /* Estilo para a logo principal */
+        .logo-container img { 
+            max-width: 320px; max-height: 320px; 
+            width: 100%; height: 100%;
+            object-fit: contain; 
+            border-radius: 0;
+            background: transparent;
+            padding: 0;
+            border: none;
+            box-shadow: none;
+        }
+        
+        .logo-placeholder {
+            color: rgba(255, 255, 255, 0.4); font-size: 1.6rem; 
+            text-align: center; line-height: 1.4; font-weight: 300;
+        }
+
+        .institution-info { z-index: 2; text-align: center; }
+        .institution-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; letter-spacing: 1px; }
+        .course-name { font-size: 1.8rem; font-weight: 300; margin-bottom: 1rem; line-height: 1.3; }
+        .course-highlight { color: #228B22; font-weight: 400; }
+
+        .welcome-text { z-index: 2; margin-top: 2rem; text-align: center; }
+        .welcome-text h1 { font-size: 2.2rem; font-weight: 300; margin-bottom: 1rem; }
+        .welcome-text p { font-size: 1rem; opacity: 0.8; margin-bottom: 2.5rem; line-height: 1.6; color: #cccccc; }
+
+        /* Seção Primeiro Acesso */
+        .first-access-section {
+            background: rgba(34, 139, 34, 0.15); border: 2px solid rgba(34, 139, 34, 0.3);
+            border-radius: 15px; padding: 1.5rem; margin-top: 1rem;
+            backdrop-filter: blur(10px); position: relative; overflow: hidden;
+        }
+        .first-access-section::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+            background: linear-gradient(90deg, #228B22, #32CD32, #228B22);
+            animation: shimmer 2s infinite;
+        }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+
+        .first-access-title { font-size: 1.1rem; font-weight: 600; color: #32CD32; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
+        .first-access-subtitle { font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem; line-height: 1.4; }
+
+        .toggle-btn {
+            background: linear-gradient(135deg, #228B22, #32CD32); border: none; color: white;
+            padding: 15px 35px; border-radius: 30px; font-size: 1rem; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
+            letter-spacing: 1px; width: 100%; box-shadow: 0 4px 15px rgba(34, 139, 34, 0.3);
+        }
+        .toggle-btn:hover {
+            transform: translateY(-3px); box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
+            background: linear-gradient(135deg, #32CD32, #228B22);
+        }
+
+        /* Painel Direito */
+        .right-panel {
+            flex: 1; background: #ffffff; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: 3rem 3rem 3rem 4rem;
+            position: relative;
+        }
+        .right-panel::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 4px; height: 100%; background: linear-gradient(to bottom, #228B22, #2F4F2F);
+        }
+
+        .form-container { width: 100%; max-width: 400px; }
+        .form-header { text-align: center; margin-bottom: 2.5rem; }
+        .form-header h2 { color: #1a1a1a; font-size: 2rem; font-weight: 300; margin-bottom: 0.5rem; }
+        .form-subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2rem; }
+
+        /* Botão Login Institucional */
+        .institutional-login { margin-bottom: 1.5rem; }
+        .institutional-btn {
+            width: 100%; padding: 12px 20px; border: 2px solid #e1e1e1; border-radius: 8px;
+            background: white; cursor: pointer; transition: all 0.3s ease; text-decoration: none;
+            color: #666; font-weight: 500; font-size: 0.95rem; display: flex;
+            align-items: center; justify-content: center; gap: 10px;
+        }
+        .institutional-btn:hover {
+            border-color: #228B22; color: #228B22; transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(34, 139, 34, 0.2);
+        }
+
+        .institutional-icon {
+            width: 20px; height: 20px; background: #228B22; border-radius: 4px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .institutional-icon img { 
+            width: 16px; height: 16px; 
+            object-fit: contain; border-radius: 2px; 
+        }
+
+        /* DIVISOR */
+        .divider {
+            margin: 1.5rem 0; 
+            position: relative;
+            height: 1px; 
+            background: #e1e1e1; 
+        }
+
+        .input-group { margin-bottom: 1.5rem; }
+        .input-group input {
+            width: 100%; padding: 15px 20px; border: 2px solid #e1e1e1; border-radius: 8px;
+            font-size: 1rem; background: #f9f9f9; transition: all 0.3s ease; color: #333;
+        }
+        .input-group input:focus {
+            outline: none; border-color: #228B22; background: white;
+            box-shadow: 0 0 0 3px rgba(34, 139, 34, 0.1);
+        }
+        .input-group input::placeholder { color: #999; }
+
+        .login-btn {
+            width: 100%; padding: 15px; border: none; border-radius: 8px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); color: white;
+            font-size: 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;
+            position: relative; overflow: hidden;
+        }
+        .login-btn::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(34, 139, 34, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        .login-btn:hover::before { left: 100%; }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); }
+
+        .forgot-password { text-align: center; margin-top: 1rem; }
+        .forgot-password a { color: #228B22; text-decoration: none; font-size: 0.9rem; transition: color 0.3s ease; }
+        .forgot-password a:hover { color: #2F4F2F; text-decoration: underline; }
+
+        #message {
+            text-align: center; margin-top: 1rem; font-weight: 500; padding: 12px;
+            border-radius: 8px; transition: all 0.3s ease;
+        }
+        .success { color: #155724; background-color: #d4edda; border: 1px solid #c3e6cb; }
+        .error { color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb; }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container { flex-direction: column; }
+            .left-panel { flex: 0 0 45%; padding: 2rem; }
+            .right-panel { flex: 1; padding: 2rem; }
+            .welcome-text h1 { font-size: 1.8rem; }
+            .course-name { font-size: 1.5rem; }
+            .logo-container { width: 200px; height: 200px; } /* Ajustado para mobile */
+            .logo-container img { max-width: 200px; max-height: 200px; }
+            .first-access-section { padding: 1rem; }
+        }
+
+        /* Loading */
+        .loading { opacity: 0.7; pointer-events: none; }
+        .loading .login-btn { background: #6c757d; cursor: not-allowed; }
+        .loading .login-btn::after {
+            content: ''; position: absolute; width: 20px; height: 20px; margin: auto;
+            border: 2px solid transparent; border-top-color: #ffffff; border-radius: 50%;
+            animation: spin 1s linear infinite; top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes spin { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Painel Esquerdo -->
+        <div class="left-panel">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <img src="imagens/logo-engenharia.png" alt="Logo Engenharia Software">
+                </div>
+                
+                <div class="institution-info">
+                    <div class="institution-name">SISTEMA ACADÊMICO</div>
+                    <div class="course-name">
+                        <span class="course-highlight">ENGENHARIA</span><br>DE SOFTWARE
+                    </div>
+                </div>
+            </div>
+            
+            <div class="welcome-text">
+                <h1>Bem-vindo!</h1>
+                <p>Para se manter conectado conosco,<br>faça login com suas credenciais</p>
+                
+                <div class="first-access-section">
+                    <div class="first-access-title">Primeiro Acesso?</div>
+                    <div class="first-access-subtitle">
+                        Novo aqui? Clique aqui para criar sua conta e começar sua jornada acadêmica
+                    </div>
+                    <button class="toggle-btn" onclick="alert('Funcionalidade de cadastro em desenvolvimento')">
+                        Criar Conta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Painel Direito -->
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Acessar Sistema</h2>
+                    <p class="form-subtitle">Entre com suas credenciais acadêmicas</p>
+                    
+                    <div class="institutional-login">
+                        <a href="#" class="institutional-btn" onclick="alert('Página de login institucional em desenvolvimento')">
+                            <div class="institutional-icon">
+                                <img src="imagens/mini-logo.jpg" alt="Ícone Institucional">
+                            </div>
+                            Login Institucional
+                        </a>
+                    </div>
+                    
+                    <div class="divider"></div> 
+                </div>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <input type="email" id="email" name="email" placeholder="Email" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="senha" name="senha" placeholder="Senha" required>
+                    </div>
+                    <button type="submit" class="login-btn">Entrar no Sistema</button>
+                </form>
+
+                <div class="forgot-password">
+                    <a href="#" onclick="alert('Funcionalidade em desenvolvimento')">Esqueceu sua senha?</a>
+                </div>
+
+                <p id="message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const messageElement = document.getElementById('message');
+        const container = document.querySelector('.container');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            container.classList.add('loading');
+            
+            const email = event.target.email.value;
+            const senha = event.target.senha.value;
+            
+            messageElement.textContent = '';
+            messageElement.className = '';
+
+            try {
+                const response = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+
+                const data = await response.json();
+                container.classList.remove('loading');
+
+                if (response.ok) {
+                    messageElement.textContent = data.message;
+                    messageElement.classList.add('success');
+                    localStorage.setItem('authToken', data.token);
+                    setTimeout(() => alert('Login com sucesso! Você seria redirecionado agora.'), 1000);
+                } else {
+                    messageElement.textContent = data.error || 'Ocorreu um erro.';
+                    messageElement.classList.add('error');
+                }
+            } catch (error) {
+                container.classList.remove('loading');
+                messageElement.textContent = 'Não foi possível conectar ao servidor. Tente novamente mais tarde.';
+                messageElement.classList.add('error');
+            }
+        });
+    </script>
+</body>
+</html>
