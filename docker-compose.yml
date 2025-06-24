@@ -1,0 +1,35 @@
+# Versão do Docker Compose
+version: '3.8'
+
+# Definição dos nossos serviços (containers)
+services:
+  # Nosso serviço de API (backend)
+  api:
+    build: . # Constrói a imagem a partir do Dockerfile na pasta atual
+    ports:
+      - "3000:3000" # Mapeia a porta 3000 do seu PC para a 3000 do container
+    env_file:
+      - .env # Carrega as variáveis de ambiente do arquivo .env
+    environment:
+      # Sobrescrevemos o host e a porta para a comunicação DENTRO do Docker
+      - DB_HOST=db
+      - DB_PORT=5432
+    depends_on:
+      - db # Diz para este serviço esperar o serviço 'db' estar pronto
+
+  # Nosso serviço de Banco de Dados
+  db:
+    image: postgres:16-alpine # Usa a imagem oficial do PostgreSQL
+    environment:
+      POSTGRES_USER: ${DB_USER} # Usa a variável do seu arquivo .env
+      POSTGRES_PASSWORD: ${DB_PASSWORD} # Usa a variável do seu arquivo .env
+      POSTGRES_DB: ${DB_DATABASE} # Usa a variável do seu arquivo .env
+    ports:
+      - "5433:5432" # Mapeia a porta 5433 do seu PC para a 5432 do container
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Volume para persistir os dados
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql # Copia nosso script de tabelas para o diretório de inicialização do Postgres
+
+# Definição dos volumes nomeados
+volumes:
+  postgres_data:
