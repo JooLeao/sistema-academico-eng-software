@@ -12,6 +12,7 @@ CREATE TABLE Usuarios (
 CREATE TABLE Professores (
     id SERIAL PRIMARY KEY,
     usuario_id INT UNIQUE NOT NULL,
+    cpf VARCHAR(11) UNIQUE NOT NULL, -- ADICIONADO: Campo CPF para professores
     departamento VARCHAR(100),
     especialidade VARCHAR(100),
     FOREIGN KEY (usuario_id) REFERENCES Usuarios(id) ON DELETE CASCADE

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Sistema Acadêmico</title>
+    <title>Login Alunos - Sistema Acadêmico</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -26,7 +26,6 @@
 
         .logo-section { text-align: center; z-index: 2; margin-bottom: 2rem; }
         
-        /* LOGO AINDA MAIOR */
         .logo-container {
             width: 320px; height: 320px; 
             background: transparent;
@@ -42,7 +41,6 @@
             filter: brightness(1.05);
         }
 
-        /* Estilo para a logo principal */
         .logo-container img { 
             max-width: 320px; max-height: 320px; 
             width: 100%; height: 100%;
@@ -64,35 +62,21 @@
         .course-name { font-size: 1.8rem; font-weight: 300; margin-bottom: 1rem; line-height: 1.3; }
         .course-highlight { color: #228B22; font-weight: 400; }
 
-        .welcome-text { z-index: 2; margin-top: 2rem; text-align: center; }
-        .welcome-text h1 { font-size: 2.2rem; font-weight: 300; margin-bottom: 1rem; }
-        .welcome-text p { font-size: 1rem; opacity: 0.8; margin-bottom: 2.5rem; line-height: 1.6; color: #cccccc; }
-
-        /* Seção Primeiro Acesso */
-        .first-access-section {
-            background: rgba(34, 139, 34, 0.15); border: 2px solid rgba(34, 139, 34, 0.3);
-            border-radius: 15px; padding: 1.5rem; margin-top: 1rem;
-            backdrop-filter: blur(10px); position: relative; overflow: hidden;
+        .welcome-text { z-index: 2; margin-top: 3rem; text-align: center; }
+        .welcome-text h1 { font-size: 2.4rem; font-weight: 300; margin-bottom: 1rem; }
+        .welcome-text p { font-size: 1.1rem; opacity: 0.9; line-height: 1.6; color: #cccccc; }
+        .student-info { 
+            margin-top: 2rem; padding: 1.5rem; 
+            background: rgba(255, 255, 255, 0.05); 
+            border-radius: 12px; 
+            backdrop-filter: blur(10px);
         }
-        .first-access-section::before {
-            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-            background: linear-gradient(90deg, #228B22, #32CD32, #228B22);
-            animation: shimmer 2s infinite;
+        .student-info h3 { 
+            color: #32CD32; font-size: 1.2rem; font-weight: 500; 
+            margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; 
         }
-        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
-
-        .first-access-title { font-size: 1.1rem; font-weight: 600; color: #32CD32; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 1px; }
-        .first-access-subtitle { font-size: 0.9rem; color: rgba(255, 255, 255, 0.8); margin-bottom: 1rem; line-height: 1.4; }
-
-        .toggle-btn {
-            background: linear-gradient(135deg, #228B22, #32CD32); border: none; color: white;
-            padding: 15px 35px; border-radius: 30px; font-size: 1rem; font-weight: 600;
-            cursor: pointer; transition: all 0.3s ease; text-transform: uppercase;
-            letter-spacing: 1px; width: 100%; box-shadow: 0 4px 15px rgba(34, 139, 34, 0.3);
-        }
-        .toggle-btn:hover {
-            transform: translateY(-3px); box-shadow: 0 8px 25px rgba(34, 139, 34, 0.4);
-            background: linear-gradient(135deg, #32CD32, #228B22);
+        .student-info p { 
+            font-size: 0.95rem; opacity: 0.8; line-height: 1.5; 
         }
 
         /* Painel Direito */
@@ -111,29 +95,29 @@
         .form-header h2 { color: #1a1a1a; font-size: 2rem; font-weight: 300; margin-bottom: 0.5rem; }
         .form-subtitle { color: #666; font-size: 0.95rem; margin-bottom: 2rem; }
 
-        /* Botão Login Institucional */
-        .institutional-login { margin-bottom: 1.5rem; }
-        .institutional-btn {
+        /* Botão Login Professor */
+        .teacher-login { margin-bottom: 1.5rem; }
+        .teacher-btn {
             width: 100%; padding: 12px 20px; border: 2px solid #e1e1e1; border-radius: 8px;
             background: white; cursor: pointer; transition: all 0.3s ease; text-decoration: none;
             color: #666; font-weight: 500; font-size: 0.95rem; display: flex;
             align-items: center; justify-content: center; gap: 10px;
         }
-        .institutional-btn:hover {
+        .teacher-btn:hover {
             border-color: #228B22; color: #228B22; transform: translateY(-2px);
             box-shadow: 0 4px 15px rgba(34, 139, 34, 0.2);
         }
 
-        .institutional-icon {
+        /* Logo pequena para professor */
+        .teacher-icon {
             width: 20px; height: 20px; background: #228B22; border-radius: 4px;
             display: flex; align-items: center; justify-content: center;
         }
-        .institutional-icon img { 
+        .teacher-icon img { 
             width: 16px; height: 16px; 
             object-fit: contain; border-radius: 2px; 
         }
 
-        /* DIVISOR */
         .divider {
             margin: 1.5rem 0; 
             position: relative;
@@ -185,9 +169,9 @@
             .right-panel { flex: 1; padding: 2rem; }
             .welcome-text h1 { font-size: 1.8rem; }
             .course-name { font-size: 1.5rem; }
-            .logo-container { width: 200px; height: 200px; } /* Ajustado para mobile */
+            .logo-container { width: 200px; height: 200px; }
             .logo-container img { max-width: 200px; max-height: 200px; }
-            .first-access-section { padding: 1rem; }
+            .student-info { padding: 1rem; }
         }
 
         /* Loading */
@@ -220,17 +204,12 @@
             </div>
             
             <div class="welcome-text">
-                <h1>Bem-vindo!</h1>
-                <p>Para se manter conectado conosco,<br>faça login com suas credenciais</p>
+                <h1>Bem-vindo, Aluno!</h1>
+                <p>Acesse sua área acadêmica com suas credenciais estudantis</p>
                 
-                <div class="first-access-section">
-                    <div class="first-access-title">Primeiro Acesso?</div>
-                    <div class="first-access-subtitle">
-                        Novo aqui? Clique aqui para criar sua conta e começar sua jornada acadêmica
-                    </div>
-                    <button class="toggle-btn" onclick="alert('Funcionalidade de cadastro em desenvolvimento')">
-                        Criar Conta
-                    </button>
+                <div class="student-info">
+                    <h3>Portal do Estudante</h3>
+                    <p>Aqui você pode acessar suas notas, horários, materiais de aula e muito mais.</p>
                 </div>
             </div>
         </div>
@@ -239,15 +218,15 @@
         <div class="right-panel">
             <div class="form-container">
                 <div class="form-header">
-                    <h2>Acessar Sistema</h2>
-                    <p class="form-subtitle">Entre com suas credenciais acadêmicas</p>
+                    <h2>Login do Aluno</h2>
+                    <p class="form-subtitle">Entre com suas credenciais estudantis</p>
                     
-                    <div class="institutional-login">
-                        <a href="#" class="institutional-btn" onclick="alert('Página de login institucional em desenvolvimento')">
-                            <div class="institutional-icon">
-                                <img src="imagens/mini-logo.jpg" alt="Ícone Institucional">
+                    <div class="teacher-login">
+                        <a href="login-professor.html" class="teacher-btn">
+                            <div class="teacher-icon">
+                                <img src="imagens/mini-logo.jpg" alt="Ícone Professor">
                             </div>
-                            Login Institucional
+                            Área do Professor
                         </a>
                     </div>
                     
@@ -256,16 +235,16 @@
 
                 <form id="loginForm">
                     <div class="input-group">
-                        <input type="email" id="email" name="email" placeholder="Email" required>
+                        <input type="email" id="email" name="email" placeholder="Email estudantil" required>
                     </div>
                     <div class="input-group">
                         <input type="password" id="senha" name="senha" placeholder="Senha" required>
                     </div>
-                    <button type="submit" class="login-btn">Entrar no Sistema</button>
+                    <button type="submit" class="login-btn">Entrar como Aluno</button>
                 </form>
 
                 <div class="forgot-password">
-                    <a href="#" onclick="alert('Funcionalidade em desenvolvimento')">Esqueceu sua senha?</a>
+                    <a href="esqueceu-senha.html">Esqueceu sua senha?</a>
                 </div>
 
                 <p id="message"></p>
@@ -289,22 +268,26 @@
             messageElement.className = '';
 
             try {
-                const response = await fetch('http://localhost:3000/login', {
+                const response = await fetch('http://localhost:3000/login/aluno', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, senha })
+                    body: JSON.stringify({ email, senha, tipo: 'aluno' })
                 });
 
                 const data = await response.json();
                 container.classList.remove('loading');
 
                 if (response.ok) {
-                    messageElement.textContent = data.message;
+                    messageElement.textContent = 'Login realizado com sucesso!';
                     messageElement.classList.add('success');
                     localStorage.setItem('authToken', data.token);
-                    setTimeout(() => alert('Login com sucesso! Você seria redirecionado agora.'), 1000);
+                    localStorage.setItem('userType', 'aluno');
+                    setTimeout(() => {
+                        alert('Redirecionando para o portal do aluno...');
+                        // window.location.href = 'dashboard-aluno.html';
+                    }, 1000);
                 } else {
-                    messageElement.textContent = data.error || 'Ocorreu um erro.';
+                    messageElement.textContent = data.error || 'Credenciais inválidas.';
                     messageElement.classList.add('error');
                 }
             } catch (error) {
