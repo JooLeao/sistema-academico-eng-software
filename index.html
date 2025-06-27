@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Acadêmico - Engenharia de Software</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; color: #333; background: #f5f5f5;
+        }
+
+        /* Header - LOGO AUMENTADO */
+        .header {
+            background: #000000; color: white; position: fixed; top: 0; width: 100%;
+            z-index: 1000; box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease; padding: 1.2rem 0;
+        }
+        .header.scrolled {
+            padding: 1rem 0;
+        }
+        .header-content {
+            max-width: 1400px; margin: 0 auto; display: flex;
+            justify-content: space-between; align-items: center; padding: 0 2rem;
+        }
+        .logo-header {
+            display: flex; align-items: center; gap: 15px;
+        }
+        .logo-header img {
+            width: 140px; height: 120px; object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        .header.scrolled .logo-header img {
+            width: 100px; height: 100px;
+        }
+        .logo-text h1 {
+            font-size: 1.8rem; font-weight: 600; margin-bottom: 6px;
+            color: white;
+        }
+        .logo-text p {
+            font-size: 1.1rem; color: #2F4F2F; font-weight: 500;
+        }
+        .header.scrolled .logo-text h1 {
+            font-size: 1.5rem;
+        }
+        .header.scrolled .logo-text p {
+            font-size: 1rem;
+        }
+        
+        .header-right {
+            display: flex; align-items: center; gap: 1.5rem;
+        }
+        .search-container {
+            display: flex; align-items: center;
+        }
+        .search-box {
+            padding: 10px 15px; border: 2px solid #000000; border-radius: 4px 0 0 4px;
+            background: white; color: #333; font-size: 0.9rem;
+            width: 250px; outline: none;
+        }
+        .search-btn {
+            padding: 10px 15px; border: 2px solid #000000; border-left: none;
+            border-radius: 0 4px 4px 0; background: #2F4F2F; color: white; 
+            cursor: pointer; transition: background 0.3s ease;
+            width: 45px; height: 42px; display: flex; align-items: center;
+            justify-content: center;
+        }
+        .search-btn:hover {
+            background: #1F3F1F;
+        }
+        .search-icon {
+            width: 16px; height: 16px; background: white;
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E") no-repeat center;
+            mask-size: contain;
+        }
+        .social-header {
+            display: flex; gap: 10px;
+        }
+        .social-link-header {
+            width: 35px; height: 35px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            background: white; transition: transform 0.3s ease;
+            overflow: hidden; border: 1px solid #000000;
+        }
+        .social-link-header:hover {
+            transform: translateY(-2px); background: #f0f0f0;
+        }
+        .social-link-header img {
+            width: 20px; height: 20px; object-fit: contain;
+        }
+
+        /* Navigation Bar - AJUSTADO PARA LOGO MAIOR */
+        .nav-bar {
+            background: #2F4F2F; padding: 1rem 0; margin-top: 150px;
+            transition: margin-top 0.3s ease;
+        }
+        .header.scrolled ~ .nav-bar {
+            margin-top: 120px;
+        }
+        .nav-content {
+            max-width: 1400px; margin: 0 auto; padding: 0 2rem;
+        }
+        .nav-menu {
+            display: flex; gap: 0; list-style: none;
+        }
+        .nav-menu a {
+            color: white; text-decoration: none; font-weight: 500;
+            padding: 15px 30px; transition: all 0.3s ease;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            max-width: 1400px; margin: 0 auto; display: flex;
+            gap: 2rem; padding: 2rem; min-height: calc(100vh - 200px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 300px; background: white; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 1.5rem;
+            height: fit-content; position: sticky; top: 220px;
+            border: 1px solid #ddd;
+        }
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+        .sidebar-section h3 {
+            color: #2F4F2F; font-size: 1.1rem; margin-bottom: 1rem;
+            padding-bottom: 0.5rem; border-bottom: 2px solid #2F4F2F;
+        }
+        .sidebar-links {
+            list-style: none;
+        }
+        .sidebar-links li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-links a {
+            color: #333; text-decoration: none; padding: 8px 0;
+            display: block; transition: all 0.3s ease;
+        }
+        .sidebar-links a:hover {
+            color: #2F4F2F; padding-left: 10px; font-weight: 500;
+        }
+        
+        /* QR Code Section - INSTRUÇÕES CLARAS */
+        .qr-section {
+            text-align: center; padding: 1.5rem; background: #f8f9fa;
+            border-radius: 8px; margin-bottom: 1.5rem; border: 1px solid #ddd;
+        }
+        .qr-section h4 {
+            color: #2F4F2F; margin-bottom: 1rem; font-size: 1rem;
+        }
+        .qr-placeholder {
+            width: 150px; height: 150px; background: white;
+            border: 2px dashed #2F4F2F; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto; color: #2F4F2F; font-size: 0.85rem;
+            text-align: center; line-height: 1.3; font-weight: 500;
+            position: relative; overflow: hidden;
+        }
+        .qr-placeholder::before {
+            content: "📱";
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .qr-image {
+            width: 100%; height: 100%; object-fit: cover;
+            border-radius: 6px;
+        }
+        .qr-section p {
+            color: #666; margin-top: 10px; font-size: 0.9rem;
+        }
+        .qr-instructions {
+            background: #e8f5e8; padding: 10px; border-radius: 6px;
+            margin-top: 10px; font-size: 0.8rem; color: #2F4F2F;
+            border-left: 3px solid #2F4F2F;
+        }
+
+        /* Expandable Sections */
+        .expandable {
+            border: 1px solid #ddd; border-radius: 6px; margin-bottom: 1rem;
+            background: white;
+        }
+        .expandable-header {
+            background: #000000; padding: 12px 15px; cursor: pointer;
+            display: flex; justify-content: space-between; align-items: center;
+            font-weight: 500; color: white; border-radius: 6px 6px 0 0;
+        }
+        .expandable-header:hover {
+            background: #555;
+        }
+        .expandable-content {
+            padding: 15px; display: none; background: white;
+        }
+        .expandable-content.active {
+            display: block;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1; background: white; border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden;
+            border: 1px solid #ddd;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(47, 79, 79, 0.8)),
+                        url('/placeholder.svg?height=500&width=1000') center/cover;
+            height: 60vh; display: flex; align-items: center; justify-content: center;
+            text-align: center; color: white; position: relative;
+        }
+        .hero-content {
+            max-width: 700px; padding: 0 2rem;
+        }
+        .hero h1 {
+            font-size: 2.5rem; font-weight: 300; margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        .hero-highlight {
+            color: #90EE90; font-weight: 400;
+        }
+        .hero p {
+            font-size: 1.1rem; margin-bottom: 2rem; opacity: 0.9;
+        }
+        .hero-buttons {
+            display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+        }
+        .btn-hero {
+            padding: 12px 25px; border: none; border-radius: 6px;
+            font-size: 1rem; font-weight: 600; text-decoration: none;
+            transition: all 0.3s ease; text-transform: uppercase;
+        }
+        .btn-hero.primary {
+            background: #2F4F2F; color: white;
+        }
+        .btn-hero.secondary {
+            background: transparent; color: white; border: 2px solid white;
+        }
+        .btn-hero:hover {
+            transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Content Sections */
+        .content-section {
+            padding: 3rem 2rem; background: white;
+        }
+        .content-section:nth-child(even) {
+            background: #f8f9fa;
+        }
+        .section-title {
+            text-align: center; margin-bottom: 2rem;
+        }
+        .section-title h2 {
+            font-size: 2rem; font-weight: 300; color: #333; margin-bottom: 1rem;
+        }
+        .section-title p {
+            color: #666; max-width: 600px; margin: 0 auto;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem; margin-top: 2rem;
+        }
+        .card {
+            background: white; padding: 2rem; border-radius: 8px;
+            border-left: 4px solid #2F4F2F; transition: transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); border: 1px solid #ddd;
+        }
+        .card:hover {
+            transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .card h3 {
+            color: #2F4F2F; margin-bottom: 1rem;
+        }
+        .card p {
+            color: #666;
+        }
+
+        /* News Tabs */
+        .news-tabs {
+            display: flex; justify-content: center; gap: 1rem; margin-bottom: 3rem;
+        }
+        .tab-btn {
+            padding: 12px 24px; border: 2px solid #2F4F2F; border-radius: 25px;
+            background: transparent; color: #2F4F2F; cursor: pointer;
+            font-weight: 500; transition: all 0.3s ease;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: #2F4F2F; color: white;
+        }
+
+        /* News Grid */
+        .news-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem; margin-top: 2rem;
+        }
+        .news-card {
+            background: white; border-radius: 8px; overflow: hidden;
+            transition: transform 0.3s ease; border: 1px solid #ddd;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .news-card:hover {
+            transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        .news-card img {
+            width: 100%; height: 250px; object-fit: cover;
+        }
+        .news-content {
+            padding: 2rem;
+        }
+        .news-category {
+            background: #2F4F2F; color: white; padding: 4px 12px;
+            border-radius: 4px; font-size: 0.8rem; font-weight: 500;
+            display: inline-block; margin-bottom: 1rem;
+        }
+        .news-date {
+            color: #2F4F2F; font-size: 0.9rem; font-weight: 500; margin-bottom: 1rem;
+        }
+        .news-card h3 {
+            color: #333; margin-bottom: 1rem; font-size: 1.3rem;
+            line-height: 1.4;
+        }
+        .news-card p {
+            color: #666; line-height: 1.6; font-size: 0.95rem;
+        }
+        .event-tag {
+            background: #666; color: white; padding: 4px 12px;
+            border-radius: 4px; font-size: 0.8rem; font-weight: 500;
+            display: inline-block; margin-bottom: 1rem;
+        }
+
+        /* GALERIA INTERATIVA */
+        .gallery-grid {
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem; 
+            margin-top: 2rem;
+        }
+        .gallery-item {
+            position: relative; 
+            overflow: hidden; 
+            border-radius: 8px;
+            cursor: pointer; 
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .gallery-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .gallery-item img {
+            width: 100%; 
+            height: 200px; 
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        .gallery-overlay {
+            position: absolute; 
+            bottom: 0; 
+            left: 0; 
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white; 
+            padding: 1rem; 
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+        .gallery-overlay h4 {
+            font-size: 1rem; 
+            margin-bottom: 0.5rem;
+        }
+        .gallery-overlay p {
+            font-size: 0.8rem; 
+            opacity: 0.9;
+        }
+
+        /* MODAL PARA GALERIA */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 2000; 
+            left: 0; 
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.9);
+            animation: fadeIn 0.3s ease;
+        }
+        .modal.active {
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .modal-content {
+            position: relative; 
+            max-width: 90%; 
+            max-height: 90%;
+            animation: zoomIn 0.3s ease;
+        }
+        .modal-content img {
+            width: 100%; 
+            height: auto; 
+            border-radius: 8px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .modal-close {
+            position: absolute; 
+            top: -40px; 
+            right: 0;
+            color: white; 
+            font-size: 2rem; 
+            cursor: pointer;
+            background: rgba(0,0,0,0.5); 
+            border-radius: 50%;
+            width: 40px; 
+            height: 40px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+        .modal-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .modal-nav {
+            position: absolute; 
+            top: 50%; 
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5); 
+            color: white; 
+            border: none;
+            font-size: 2rem; 
+            cursor: pointer; 
+            padding: 1rem;
+            border-radius: 50%; 
+            transition: background 0.3s ease;
+        }
+        .modal-nav:hover {
+            background: rgba(255,255,255,0.2);
+        }
+        .modal-prev {
+            left: -60px;
+        }
+        .modal-next {
+            right: -60px;
+        }
+        .modal-info {
+            position: absolute; 
+            bottom: -60px; 
+            left: 0; 
+            right: 0;
+            color: white; 
+            text-align: center; 
+            background: rgba(0,0,0,0.7);
+            padding: 1rem; 
+            border-radius: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes zoomIn {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        /* Footer */
+        .footer {
+            background: #000000; color: white; padding: 3rem 0;
+            margin-top: 3rem; width: 100%;
+        }
+        .footer-container {
+            max-width: 100%; margin: 0; padding: 0 4rem;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .contact-info {
+            flex: 1;
+        }
+        .contact-info h3 {
+            color: white; margin-bottom: 1.5rem; font-size: 1.3rem;
+        }
+        .contact-item {
+            margin-bottom: 0.8rem; color: #ccc; font-size: 0.95rem;
+        }
+        .contact-item strong {
+            color: white;
+        }
+        .contact-item a {
+            color: #90EE90; text-decoration: none;
+        }
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+        .footer-right {
+            display: flex; align-items: center; gap: 2rem;
+        }
+        .footer-social {
+            display: flex; flex-direction: column; gap: 12px;
+        }
+        .social-link-footer {
+            width: 40px; height: 40px; border-radius: 6px;
+            display: flex; align-items: center; justify-content: center;
+            background: white; transition: transform 0.3s ease;
+            overflow: hidden; border: 1px solid #000000;
+        }
+        .social-link-footer:hover {
+            transform: translateY(-2px); background: #f0f0f0;
+        }
+        .social-link-footer img {
+            width: 24px; height: 24px; object-fit: contain;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%; position: static;
+            }
+            .footer-container {
+                flex-direction: column; gap: 2rem; text-align: center;
+            }
+        }
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem 0;
+            }
+            .header.scrolled {
+                padding: 0.8rem 0;
+            }
+            .header-content {
+                flex-direction: column; gap: 1rem;
+            }
+            .nav-bar {
+                margin-top: 180px;
+            }
+            .header.scrolled ~ .nav-bar {
+                margin-top: 150px;
+            }
+            .nav-menu {
+                flex-wrap: wrap; justify-content: center;
+            }
+            .search-box {
+                width: 200px;
+            }
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .cards-grid, .news-grid, .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            .footer-container {
+                padding: 0 2rem;
+            }
+            .logo-header img {
+                width: 100px; height: 100px;
+            }
+            .header.scrolled .logo-header img {
+                width: 80px; height: 80px;
+            }
+            .logo-text h1 {
+                font-size: 1.5rem;
+            }
+            .logo-text p {
+                font-size: 1rem;
+            }
+            .news-tabs {
+                flex-wrap: wrap;
+            }
+            .modal-nav {
+                display: none;
+            }
+            .modal-info {
+                position: static;
+                margin-top: 1rem;
+            }
+        }
+
+        /* Scroll behavior */
+        html { scroll-behavior: smooth; }
+        
+        /* Loading animation */
+        .loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000000; display: flex; align-items: center;
+            justify-content: center; z-index: 9999; transition: opacity 0.5s ease;
+        }
+        .loading.hidden { opacity: 0; pointer-events: none; }
+        .spinner {
+            width: 50px; height: 50px; border: 3px solid #000000;
+            border-top: 3px solid #2F4F2F; border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header" id="header">
+        <div class="header-content">
+            <div class="logo-header">
+                <!-- 📍 COLOQUE SUA IMAGEM DO LOGO AQUI: imagens/logo-engenharia.png -->
+                <img src="imagens/logo-engenharia.png" alt="Logo Engenharia Software">
+                <div class="logo-text">
+                    <h1>Sistema Acadêmico</h1>
+                    <p>Engenharia de Software</p>
+                </div>
+            </div>
+            
+            <div class="header-right">
+                <div class="search-container">
+                    <input type="text" class="search-box" placeholder="Buscar no portal" id="searchInput">
+                    <button class="search-btn" onclick="performSearch()">
+                        <div class="search-icon"></div>
+                    </button>
+                </div>
+                
+                <div class="social-header">
+                    <a href="https://www.facebook.com/IFPECampusBeloJardim?locale=pt_BR" class="social-link-header" target="_blank">
+                        <img src="imagens/faceook-icon.png" alt="Facebook">
+                    </a>
+                    <a href="https://www.instagram.com/ifpecampusbelojardim/" class="social-link-header" target="_blank">
+                        <img src="imagens/instagram-icon.png" alt="Instagram">
+                    </a>
+                    <a href="https://www.youtube.com/@CanalIFPE" class="social-link-header" target="_blank">
+                        <img src="imagens/youtube-icon.png" alt="YouTube">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="nav-content">
+            <div class="nav-menu">
+                <a href="#inicio">Início</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#ingresso">Ingresso</a>
+                <a href="#noticias">Notícias</a>
+                <a href="#galeria">Galeria</a>
+                <a href="login-aluno.html">Login Aluno</a>
+                <a href="login-professor.html">Login Professor</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- QR Code Section -->
+            <div class="qr-section">
+                <h4>Acesso Rápido</h4>
+                <div class="qr-placeholder">
+                    <!-- 📍 COLOQUE SUA IMAGEM DO QR CODE AQUI -->
+                    <!-- Substitua o conteúdo abaixo por: <img src="imagens/qr-code.png" alt="QR Code" class="qr-image"> -->
+                    Coloque seu<br>QR Code aqui<br>
+                    <small>(150x150px)</small>
+                </div>
+                <p>Escaneie para acesso mobile</p>
+                <div class="qr-instructions">
+                    <strong>📁 Para adicionar o QR Code:</strong><br>
+                    1. Salve sua imagem como "qr-code.png" na pasta "imagens/"<br>
+                    2. Substitua o conteúdo do div "qr-placeholder" por:<br>
+                    &lt;img src="imagens/qr-code.png" alt="QR Code" class="qr-image"&gt;
+                </div>
+            </div>
+
+            <!-- Quick Links -->
+            <div class="sidebar-section">
+                <h3>Links Rápidos</h3>
+                <ul class="sidebar-links">
+                    <li><a href="login-aluno.html">Portal do Aluno</a></li>
+                    <li><a href="login-professor.html">Portal do Professor</a></li>
+                    <li><a href="esqueceu-senha.html">Recuperar Senha</a></li>
+                    <li><a href="#noticias">Notícias</a></li>
+                    <li><a href="#galeria">Galeria</a></li>
+                </ul>
+            </div>
+
+            <!-- Expandable Sections -->
+            <div class="expandable">
+                <div class="expandable-header" onclick="toggleExpand(this)">
+                    <span>INGRESSO</span>
+                    <span>▼</span>
+                </div>
+                <div class="expandable-content">
+                    <ul class="sidebar-links">
+                        <li><a href="https://SEU_LINK_VESTIBULAR">Vestibular 2024</a></li>
+                        <li><a href="https://SEU_LINK_ENEM">ENEM</a></li>
+                        <li><a href="https://SEU_LINK_TRANSFERENCIA">Transferência</a></li>
+                        <li><a href="https://SEU_LINK_DIPLOMA">Portador de Diploma</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="expandable">
+                <div class="expandable-header" onclick="toggleExpand(this)">
+                    <span>O CURSO</span>
+                    <span>▼</span>
+                </div>
+                <div class="expandable-content">
+                    <ul class="sidebar-links">
+                        <li><a href="#sobre">Sobre o Curso</a></li>
+                        <li><a href="#corpo-docente">Corpo Docente</a></li>
+                        <li><a href="#infraestrutura">Infraestrutura</a></li>
+                        <li><a href="#projetos">Projetos</a></li>
+                    </ul>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="hero" id="inicio">
+                <div class="hero-content">
+                    <h1>Portal Acadêmico<br><span class="hero-highlight">Engenharia de Software</span></h1>
+                    <p>Transformando ideias em soluções tecnológicas inovadoras</p>
+                    <div class="hero-buttons">
+                        <a href="login-aluno.html" class="btn-hero primary">Área do Aluno</a>
+                        <a href="login-professor.html" class="btn-hero secondary">Área do Professor</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section class="content-section" id="sobre">
+                <div class="section-title">
+                    <h2>Sobre o Curso</h2>
+                    <p>Formamos profissionais capacitados para desenvolver soluções tecnológicas que transformam o mundo</p>
+                </div>
+                
+                <div class="cards-grid">
+                    <div class="card">
+                        <h3>Inovação</h3>
+                        <p>Metodologias modernas e tecnologias de ponta para formar profissionais preparados para o mercado atual.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Qualidade</h3>
+                        <p>Corpo docente altamente qualificado e infraestrutura completa para o melhor aprendizado.</p>
+                    </div>
+                    <div class="card">
+                        <h3>Mercado</h3>
+                        <p>Conexão direta com o mercado de trabalho através de parcerias e projetos práticos.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- News & Events Section -->
+            <section class="content-section" id="noticias">
+                <div class="section-title">
+                    <h2>Notícias & Eventos</h2>
+                    <p>Fique por dentro das novidades do curso e da área de tecnologia</p>
+                </div>
+                
+                <div class="news-tabs">
+                    <button class="tab-btn active" onclick="showTab('noticias')">Notícias</button>
+                    <button class="tab-btn" onclick="showTab('eventos')">Eventos</button>
+                </div>
+                
+                <div class="news-grid" id="noticias-content">
+                    <article class="news-card">
+                        <img src="imagens/noticias-img-01.png" alt="Propesq">
+                        <div class="news-content">
+                            <div class="news-category">Notícias</div>
+                            <div class="news-date">02 de Junho, 2025</div>
+                            <h3>Propesq em desenvolvimento de Iniciação Científica e Tecnológica</h3>
+                            <p>O novo edital do IFPE permite que estudantes de cursos técnicos e superiores participem de projetos de pesquisa como bolsistas ou voluntários, com bolsas entre R$ 500 e R$ 700 por 12 meses. As submissões vão de 2 de junho a 4 de julho. Entre as novidades estão a exigência de vinculação aos ODS da ONU e uma versão do edital em Linguagem Simples, promovendo inclusão e acessibilidade. A seleção valoriza ações afirmativas e equidade de gênero.</p>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card">
+                        <img src="/placeholder.svg?height=250&width=400" alt="Novo Laboratório">
+                        <div class="news-content">
+                            <div class="news-category">Notícias</div>
+                            <div class="news-date">10 de Janeiro, 2024</div>
+                            <h3>Inauguração do Novo Laboratório de IA</h3>
+                            <p>Espaço equipado com tecnologia de ponta para pesquisa em inteligência artificial. O laboratório conta com servidores de alta performance, GPUs dedicadas e ambiente preparado para desenvolvimento de projetos de machine learning e deep learning.</p>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card">
+                        <img src="/placeholder.svg?height=250&width=400" alt="Parceria Empresas">
+                        <div class="news-content">
+                            <div class="news-category">Notícias</div>
+                            <div class="news-date">05 de Janeiro, 2024</div>
+                            <h3>Novas Parcerias com Empresas de Tech</h3>
+                            <p>Ampliação das oportunidades de estágio e emprego para nossos estudantes. Foram firmados acordos com 15 empresas do setor tecnológico, oferecendo vagas de estágio, trainee e efetivação para recém-formados.</p>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="news-grid" id="eventos-content" style="display: none;">
+                    <article class="news-card">
+                        <img src="/placeholder.svg?height=250&width=400" alt="Semana da Tecnologia">
+                        <div class="news-content">
+                            <div class="event-tag">EVENTO</div>
+                            <div class="news-date">25-29 de Março, 2024</div>
+                            <h3>Semana da Tecnologia 2024</h3>
+                            <p>Palestras, workshops e minicursos sobre as últimas tendências em tecnologia. Evento gratuito aberto à comunidade acadêmica e profissionais da área.</p>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card">
+                        <img src="/placeholder.svg?height=250&width=400" alt="Feira de Estágios">
+                        <div class="news-content">
+                            <div class="event-tag">EVENTO</div>
+                            <div class="news-date">15 de Abril, 2024</div>
+                            <h3>Feira de Estágios e Empregos</h3>
+                            <p>Conecte-se com as principais empresas de tecnologia da região. Oportunidades de estágio, trainee e vagas efetivas para estudantes e recém-formados.</p>
+                        </div>
+                    </article>
+                    
+                    <article class="news-card">
+                        <img src="/placeholder.svg?height=250&width=400" alt="Palestra DevOps">
+                        <div class="news-content">
+                            <div class="event-tag">PALESTRA</div>
+                            <div class="news-date">20 de Abril, 2024</div>
+                            <h3>DevOps na Prática</h3>
+                            <p>Palestra com especialista sobre implementação de DevOps em projetos reais. Aprenda sobre automação, integração contínua e melhores práticas.</p>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <!-- GALERIA INTERATIVA -->
+            <section class="content-section" id="galeria">
+                <div class="section-title">
+                    <h2>Galeria</h2>
+                    <p>Conheça nossa infraestrutura e atividades acadêmicas - Clique nas imagens para expandir</p>
+                </div>
+                
+                <!-- 📍 ADICIONE SUAS FOTOS AQUI -->
+                <div class="gallery-grid">
+                    <div class="gallery-item" onclick="openModal(0)">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Laboratório de Informática" data-full="/placeholder.svg?height=600&width=800">
+                        <div class="gallery-overlay">
+                            <h4>Laboratório de Informática</h4>
+                            <p>Equipamentos modernos para desenvolvimento</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" onclick="openModal(1)">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Sala de Aula" data-full="/placeholder.svg?height=600&width=800">
+                        <div class="gallery-overlay">
+                            <h4>Salas de Aula</h4>
+                            <p>Ambientes preparados para aprendizagem</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" onclick="openModal(2)">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Biblioteca" data-full="/placeholder.svg?height=600&width=800">
+                        <div class="gallery-overlay">
+                            <h4>Biblioteca</h4>
+                            <p>Acervo completo e espaço de estudos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" onclick="openModal(3)">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Laboratório de Redes" data-full="/placeholder.svg?height=600&width=800">
+                        <div class="gallery-overlay">
+                            <h4>Laboratório de Redes</h4>
+                            <p>Infraestrutura para estudos de redes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" onclick="openModal(4)">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Área de Convivência" data-full="/placeholder.svg?height=600&width=800">
+                        <div class="gallery-overlay">
+                            <h4>Área de Convivência</h4>
+                            <p>Espaços para interação e descanso</p>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" onclick="openModal(5)">
+                        <img src="/placeholder.svg?height=200&width=300" alt="Auditório" data-full="/placeholder.svg?height=600&width=800">
+                        <div class="gallery-overlay">
+                            <h4>Auditório</h4>
+                            <p>Local para eventos e palestras</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem; padding: 1rem; background: #e8f5e8; border-radius: 8px; border-left: 4px solid #2F4F2F;">
+                    <h4 style="color: #2F4F2F; margin-bottom: 0.5rem;">📁 Para adicionar suas fotos:</h4>
+                    <p style="color: #2F4F2F; font-size: 0.9rem; margin: 0;">
+                        1. Salve suas imagens na pasta "imagens/" (ex: lab1.jpg, sala1.jpg)<br>
+                        2. Substitua os src="/placeholder.svg..." pelas suas imagens<br>
+                        3. Atualize os textos e descrições conforme necessário
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para Galeria -->
+    <div class="modal" id="galleryModal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <button class="modal-nav modal-prev" onclick="prevImage()">&#8249;</button>
+            <img id="modalImage" src="/placeholder.svg" alt="">
+            <button class="modal-nav modal-next" onclick="nextImage()">&#8250;</button>
+            <div class="modal-info">
+                <h3 id="modalTitle"></h3>
+                <p id="modalDescription"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="contact-info">
+                <h3>Instituto Federal de Educação, Ciência e Tecnologia de Pernambuco</h3>
+                <div class="contact-item">
+                    <strong>Endereço:</strong> Av. Prof Luiz Freire, 500, Cidade Universitária - Recife-PE
+                </div>
+                <div class="contact-item">
+                    <strong>CEP:</strong> 50740-545
+                </div>
+                <div class="contact-item">
+                    <strong>Telefone:</strong> (81) 2125-1600
+                </div>
+                <div class="contact-item">
+                    <strong>Email:</strong> contato@engenhariasoftware.edu.br
+                </div>
+                <div class="contact-item" style="margin-top: 1rem;">
+                    <a href="#">Outros Contatos</a>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-social">
+                    <a href="https://facebook.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
+                        <img src="/placeholder.svg?height=24&width=24" alt="Facebook">
+                    </a>
+                    <a href="https://instagram.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
+                        <img src="/placeholder.svg?height=24&width=24" alt="Instagram">
+                    </a>
+                    <a href="https://youtube.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
+                        <img src="/placeholder.svg?height=24&width=24" alt="YouTube">
+                    </a>
+                    <a href="https://linkedin.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
+                        <img src="/placeholder.svg?height=24&width=24" alt="LinkedIn">
+                    </a>
+                    <a href="https://twitter.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
+                        <img src="/placeholder.svg?height=24&width=24" alt="Twitter">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Loading screen
+        window.addEventListener('load', () => {
+            const loading = document.getElementById('loading');
+            setTimeout(() => {
+                loading.classList.add('hidden');
+            }, 1000);
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Search functionality
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (searchTerm.trim() === '') return;
+
+            const sections = document.querySelectorAll('section');
+            let found = false;
+
+            sections.forEach(section => {
+                const content = section.textContent.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    section.scrollIntoView({ behavior: 'smooth' });
+                    found = true;
+                    return;
+                }
+            });
+
+            if (!found) {
+                alert(`Nenhum resultado encontrado para: "${searchTerm}"`);
+            }
+        }
+
+        // Search on Enter key
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+
+        // Tab functionality for News & Events
+        function showTab(tabName) {
+            // Hide all content
+            document.getElementById('noticias-content').style.display = 'none';
+            document.getElementById('eventos-content').style.display = 'none';
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected content and activate button
+            if (tabName === 'noticias') {
+                document.getElementById('noticias-content').style.display = 'grid';
+                document.querySelector('.tab-btn[onclick="showTab(\'noticias\')"]').classList.add('active');
+            } else {
+                document.getElementById('eventos-content').style.display = 'grid';
+                document.querySelector('.tab-btn[onclick="showTab(\'eventos\')"]').classList.add('active');
+            }
+        }
+
+        // Expandable sections
+        function toggleExpand(element) {
+            const content = element.nextElementSibling;
+            const arrow = element.querySelector('span:last-child');
+            
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                arrow.textContent = '▼';
+            } else {
+                content.classList.add('active');
+                arrow.textContent = '▲';
+            }
+        }
+
+        // GALERIA MODAL FUNCTIONALITY
+        let currentImageIndex = 0;
+        const galleryItems = document.querySelectorAll('.gallery-item');
+
+        function openModal(index) {
+            currentImageIndex = index;
+            const modal = document.getElementById('galleryModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalDescription = document.getElementById('modalDescription');
+            
+            const item = galleryItems[index];
+            const img = item.querySelector('img');
+            const overlay = item.querySelector('.gallery-overlay');
+            
+            modalImage.src = img.getAttribute('data-full') || img.src;
+            modalTitle.textContent = overlay.querySelector('h4').textContent;
+            modalDescription.textContent = overlay.querySelector('p').textContent;
+            
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('galleryModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function nextImage() {
+            currentImageIndex = (currentImageIndex + 1) % galleryItems.length;
+            openModal(currentImageIndex);
+        }
+
+        function prevImage() {
+            currentImageIndex = (currentImageIndex - 1 + galleryItems.length) % galleryItems.length;
+            openModal(currentImageIndex);
+        }
+
+        // Close modal on background click
+        document.getElementById('galleryModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            const modal = document.getElementById('galleryModal');
+            if (modal.classList.contains('active')) {
+                if (e.key === 'Escape') {
+                    closeModal();
+                } else if (e.key === 'ArrowRight') {
+                    nextImage();
+                } else if (e.key === 'ArrowLeft') {
+                    prevImage();
+                }
+            }
+        });
+
+        // Smooth scrolling for navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const headerHeight = 200;
+                    const targetPosition = target.offsetTop - headerHeight;
+                    
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
