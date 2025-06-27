@@ -268,10 +268,12 @@
             messageElement.className = '';
 
             try {
-                const response = await fetch('http://localhost:3000/login/aluno', {
+                // ALTERAÇÃO PONTUAL: Corrigindo a URL para a rota correta do backend.
+                const response = await fetch('http://localhost:3000/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, senha, tipo: 'aluno' })
+                    // O body só precisa do email e da senha, como a API espera.
+                    body: JSON.stringify({ email, senha })
                 });
 
                 const data = await response.json();
