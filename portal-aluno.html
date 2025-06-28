@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal do Aluno - Sistema Acadêmico</title>
+    <style>
+        /* Estilos Globais e Reset */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #333; 
+            background: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header - Adaptado do index.html */
+        .header {
+            background: #000000; 
+            color: white; 
+            position: sticky; /* Sticky para que o header fixe ao rolar */
+            top: 0; 
+            width: 100%;
+            z-index: 1000; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            transition: all 0.3s ease; 
+            padding: 1rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .header-content {
+            max-width: 1400px; 
+            width: 100%;
+            display: flex;
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 0 2rem;
+        }
+        .logo-header {
+            display: flex; 
+            align-items: center; 
+            gap: 15px;
+        }
+        .logo-header img {
+            width: 80px; /* Reduzido para dashboards */
+            height: 80px; 
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        .logo-text h1 {
+            font-size: 1.5rem; 
+            font-weight: 600; 
+            margin-bottom: 3px;
+            color: white;
+        }
+        .logo-text p {
+            font-size: 0.9rem; 
+            color: #2F4F2F; 
+            font-weight: 500;
+        }
+        
+        /* Botões de Ação no Header (Logout) */
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .btn-logout {
+            padding: 8px 15px;
+            background-color: #dc3545;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: 500;
+            transition: background-color 0.3s ease;
+            cursor: pointer;
+            border: none;
+        }
+        .btn-logout:hover {
+            background-color: #c82333;
+        }
+
+        /* Layout Principal da Dashboard */
+        .main-layout {
+            max-width: 1400px; 
+            margin: 2rem auto; /* Margem superior e inferior */
+            display: flex;
+            gap: 2rem; 
+            padding: 0 2rem;
+            flex-grow: 1; /* Faz o layout principal ocupar o espaço restante */
+        }
+
+        /* Sidebar de Navegação */
+        .sidebar {
+            width: 250px; 
+            background: white; 
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            padding: 1.5rem;
+            height: fit-content; /* Se ajusta ao conteúdo */
+            position: sticky; /* Fixa a sidebar ao rolar */
+            top: 100px; /* Ajustar conforme a altura do header */
+            border: 1px solid #ddd;
+        }
+        .user-info {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+        .user-info h3 {
+            color: #2F4F2F;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        .user-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .sidebar-menu {
+            list-style: none;
+        }
+        .sidebar-menu li {
+            margin-bottom: 0.5rem;
+        }
+        .sidebar-menu a {
+            color: #333; 
+            text-decoration: none; 
+            padding: 10px 15px;
+            display: flex; /* Para ícone e texto */
+            align-items: center;
+            gap: 10px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        .sidebar-menu a:hover, .sidebar-menu a.active {
+            background: #2F4F2F; 
+            color: white;
+        }
+        .sidebar-menu a svg {
+            fill: #333; /* Cor padrão do ícone */
+            transition: fill 0.3s ease;
+        }
+        .sidebar-menu a:hover svg, .sidebar-menu a.active svg {
+            fill: white; /* Cor do ícone ao passar o mouse ou ativo */
+        }
+
+        /* Conteúdo Principal da Dashboard */
+        .content-area {
+            flex: 1; 
+            background: white; 
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); 
+            overflow: hidden;
+            border: 1px solid #ddd;
+            padding: 2rem;
+        }
+        .content-section {
+            display: none; /* Escondido por padrão, JavaScript controlará a visibilidade */
+        }
+        .content-section.active {
+            display: block;
+        }
+        .content-section h2 {
+            color: #2F4F2F; 
+            margin-bottom: 1.5rem; 
+            font-size: 1.8em;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+
+        /* Estilos para cards de informação */
+        .info-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .info-card {
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease;
+        }
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .info-card h3 {
+            color: #000000;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-card h3 svg {
+            fill: #2F4F2F;
+        }
+        .info-card p {
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .info-card .highlight {
+            font-weight: bold;
+            color: #2F4F2F;
+        }
+
+        /* Estilos para Boletim */
+        .boletim-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.5rem;
+        }
+        .boletim-table th, .boletim-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .boletim-table th {
+            background-color: #2F4F2F;
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9em;
+        }
+        .boletim-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .boletim-table tr:hover {
+            background-color: #f0f0f0;
+        }
+        .status-aprovado { color: #28a745; font-weight: bold; }
+        .status-reprovado { color: #dc3545; font-weight: bold; }
+        .status-cursando { color: #ffc107; font-weight: bold; }
+
+        /* Estilos para Matrícula */
+        .matricula-details {
+            background-color: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .matricula-details p {
+            margin-bottom: 0.8rem;
+            font-size: 1.05rem;
+            color: #444;
+        }
+        .matricula-details strong {
+            color: #000000;
+        }
+
+        /* Estilos para Alterar Senha */
+        .form-alterar-senha {
+            margin-top: 1.5rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+            background-color: #fcfcfc;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .form-alterar-senha label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+        .form-alterar-senha input[type="password"] {
+            width: calc(100% - 20px); /* Ajuste para padding */
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        .form-alterar-senha button {
+            background-color: #2F4F2F;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s ease;
+        }
+        .form-alterar-senha button:hover {
+            background-color: #1a361a;
+        }
+        #senhaMessage {
+            margin-top: 1rem;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            font-weight: bold;
+        }
+        #senhaMessage.success { background-color: #d4edda; color: #155724; }
+        #senhaMessage.error { background-color: #f8d7da; color: #721c24; }
+
+
+        /* Estilos para Calendário */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-top: 1.5rem;
+            text-align: center;
+        }
+        .calendar-header {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            color: #000000;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        .calendar-header button {
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            cursor: pointer;
+            color: #2F4F2F;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+        }
+        .calendar-header button:hover {
+            background-color: #eee;
+        }
+        .calendar-day-name {
+            font-weight: bold;
+            color: #555;
+            padding: 8px 0;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+        }
+        .calendar-date {
+            padding: 10px 0;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .calendar-date:hover {
+            background-color: #e5e5e5;
+        }
+        .calendar-date.current-month {
+            background-color: white;
+            border: 1px solid #ddd;
+        }
+        .calendar-date.today {
+            background-color: #2F4F2F;
+            color: white;
+            font-weight: bold;
+            border: 1px solid #2F4F2F;
+        }
+        .calendar-date.has-event {
+            border: 2px solid #dc3545; /* Evento */
+        }
+        
+        /* Footer - Adaptado do index.html */
+        .footer {
+            background: #000000; 
+            color: white; 
+            padding: 2rem 0;
+            margin-top: 3rem; 
+            width: 100%;
+        }
+        .footer-container {
+            max-width: 100%; 
+            margin: 0; 
+            padding: 0 4rem;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            flex-wrap: wrap; /* Permite quebras em telas menores */
+            text-align: center;
+        }
+        .contact-info {
+            flex: 1;
+            min-width: 300px; /* Garante que não fique muito pequeno */
+            text-align: left;
+        }
+        .contact-info h3 {
+            color: white; 
+            margin-bottom: 1rem; 
+            font-size: 1.1rem;
+        }
+        .contact-item {
+            margin-bottom: 0.5rem; 
+            color: #ccc; 
+            font-size: 0.85rem;
+        }
+        .contact-item strong {
+            color: white;
+        }
+        .contact-item a {
+            color: #90EE90; 
+            text-decoration: none;
+        }
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+        .footer-right {
+            display: flex; 
+            align-items: center; 
+            gap: 1.5rem;
+            min-width: 200px;
+            justify-content: flex-end; /* Alinha à direita */
+        }
+        .footer-social {
+            display: flex; 
+            flex-direction: row; /* Ícones lado a lado */
+            gap: 10px;
+        }
+        .social-link-footer {
+            width: 35px; 
+            height: 35px; 
+            border-radius: 6px;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            background: white; 
+            transition: transform 0.3s ease;
+            overflow: hidden; 
+            border: 1px solid #000000;
+        }
+        .social-link-footer:hover {
+            transform: translateY(-2px); 
+            background: #f0f0f0;
+        }
+        .social-link-footer img {
+            width: 20px; 
+            height: 20px; 
+            object-fit: contain;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .header-content, .main-layout {
+                flex-direction: column;
+                padding: 0 1rem;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: center;
+                margin-top: 1rem;
+            }
+            .logo-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            .sidebar {
+                width: 100%;
+                position: static;
+                margin-bottom: 2rem;
+                padding: 1rem;
+            }
+            .sidebar-menu a {
+                justify-content: center;
+            }
+            .content-area {
+                padding: 1rem;
+            }
+            .info-cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .boletim-table, .matricula-details, .form-alterar-senha {
+                font-size: 0.9em;
+            }
+            .boletim-table th, .boletim-table td {
+                padding: 8px;
+            }
+            .calendar-header {
+                font-size: 1.2em;
+            }
+            .calendar-header button {
+                font-size: 1.5em;
+            }
+            .calendar-day-name, .calendar-date {
+                padding: 5px 0;
+            }
+            .footer-container {
+                flex-direction: column;
+                text-align: center;
+                padding: 0 1rem;
+            }
+            .contact-info, .footer-right {
+                text-align: center;
+                justify-content: center;
+            }
+            .contact-info {
+                min-width: unset;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-header">
+                <img src="imagens/logo-engenharia.png" alt="Logo Engenharia Software">
+                <div class="logo-text">
+                    <h1>Sistema Acadêmico</h1>
+                    <p>Engenharia de Software</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <span id="userName" style="color: #eee; font-weight: 500; margin-right: 1rem;">Olá, Aluno!</span>
+                <button class="btn-logout" id="logoutBtn">Sair</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-layout">
+        <aside class="sidebar">
+            <div class="user-info">
+                <h3 id="sidebarUserName"></h3>
+                <p id="sidebarUserEmail"></p>
+                <p id="sidebarUserType"></p>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" data-section="inicio" class="active">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"></path></svg>
+                    Página Inicial
+                </a></li>
+                <li><a href="#" data-section="boletim">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></svg>
+                    Boletim
+                </a></li>
+                <li><a href="#" data-section="matricula">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+                    Matrícula
+                </a></li>
+                <li><a href="#" data-section="alterar-senha">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-2c0-1.66-1.34-3-3-3V9c0-1.1-.9-2-2-2h-2c-1.1 0-2 .9-2 2v1c-1.66 0-3 1.34-3 3s1.34 3 3 3v1h-1c-.55 0-1 .45-1 1s.45 1 1 1h12c.55 0 1-.45 1-1s-.45-1-1-1h-1zM9 9h6v1H9V9z"></path></svg>
+                    Alterar Senha
+                </a></li>
+                <li><a href="#" data-section="calendario">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg>
+                    Calendário
+                </a></li>
+            </ul>
+        </aside>
+
+        <main class="content-area">
+            <section id="inicio" class="content-section active">
+                <h2>Página Inicial</h2>
+                <div class="info-cards-grid">
+                    <div class="info-card">
+                        <h3><svg viewBox="0 0 24 24" width="24" height="24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg> Meu Perfil</h3>
+                        <p><strong>Nome:</strong> <span id="homeUserName"></span></p>
+                        <p><strong>Email:</strong> <span id="homeUserEmail"></span></p>
+                        <p><strong>Tipo:</strong> <span id="homeUserType"></span></p>
+                        <p><strong>Matrícula:</strong> <span id="homeUserMatricula">N/A</span></p>
+                        <p><strong>Curso:</strong> <span id="homeUserCurso">N/A</span></p>
+                        <p><strong>Período:</strong> <span id="homeUserPeriodo">N/A</span></p>
+                    </div>
+                    <div class="info-card">
+                        <h3><svg viewBox="0 0 24 24" width="24" height="24"><path d="M17 12h-5v5h5v-5zM16 1v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2h-1V1h-2zm3 18H5V8h14v11z"></path></svg> Próximos Eventos</h3>
+                        <p>Fique atento às datas importantes do calendário acadêmico.</p>
+                        <p>Ex: <span class="highlight">Reunião de Turma:</span> 05/JUL (Sala B2)</p>
+                        <p>Ex: <span class="highlight">Prazo Entrega Projeto:</span> 15/JUL</p>
+                    </div>
+                    <div class="info-card">
+                        <h3><svg viewBox="0 0 24 24" width="24" height="24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"></path></svg> Notas Recentes</h3>
+                        <p>Verifique suas últimas avaliações e média por disciplina.</p>
+                        <p>Ex: <span class="highlight">BD I (Nota 1):</span> 8.5</p>
+                        <p>Ex: <span class="highlight">ES (Média Final):</span> 7.75</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="boletim" class="content-section">
+                <h2>Boletim</h2>
+                <table class="boletim-table">
+                    <thead>
+                        <tr>
+                            <th>Disciplina</th>
+                            <th>Nota 1</th>
+                            <th>Nota 2</th>
+                            <th>Média Final</th>
+                            <th>Frequência (%)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Engenharia de Software</td>
+                            <td>8.5</td>
+                            <td>7.0</td>
+                            <td>7.75</td>
+                            <td>90</td>
+                            <td class="status-aprovado">Aprovado</td>
+                        </tr>
+                        <tr>
+                            <td>Banco de Dados I</td>
+                            <td>7.0</td>
+                            <td>6.5</td>
+                            <td>6.75</td>
+                            <td>85</td>
+                            <td class="status-cursando">Cursando</td>
+                        </tr>
+                        <tr>
+                            <td>Programação Orientada a Objetos</td>
+                            <td>5.0</td>
+                            <td>4.0</td>
+                            <td>4.5</td>
+                            <td>70</td>
+                            <td class="status-reprovado">Reprovado</td>
+                        </tr>
+                        </tbody>
+                </table>
+            </section>
+
+            <section id="matricula" class="content-section">
+                <h2>Minha Matrícula</h2>
+                <div class="matricula-details">
+                    <p><strong>Status Geral:</strong> <span class="highlight">Ativo</span></p>
+                    <p><strong>Número de Matrícula:</strong> <span id="matriculaNum">N/A</span></p>
+                    <p><strong>Curso:</strong> <span id="matriculaCurso">N/A</span></p>
+                    <p><strong>Período Atual:</strong> <span id="matriculaPeriodo">N/A</span></p>
+                    <p><strong>Disciplinas Atuais:</strong></p>
+                    <ul>
+                        <li>Banco de Dados I (Turma 2025.1)</li>
+                        <li>Redes de Computadores (Turma 2025.1)</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">Para informações detalhadas sobre sua matrícula ou para realizar ajustes, entre em contato com a secretaria.</p>
+                </div>
+            </section>
+
+            <section id="alterar-senha" class="content-section">
+                <h2>Alterar Senha</h2>
+                <form id="formAlterarSenha" class="form-alterar-senha">
+                    <label for="currentPassword">Senha Atual:</label>
+                    <input type="password" id="currentPassword" required>
+                    
+                    <label for="newPassword">Nova Senha:</label>
+                    <input type="password" id="newPassword" required>
+                    
+                    <label for="confirmNewPassword">Confirmar Nova Senha:</label>
+                    <input type="password" id="confirmNewPassword" required>
+                    
+                    <button type="submit">Alterar Senha</button>
+                    <div id="senhaMessage" style="display: none;"></div>
+                </form>
+            </section>
+
+            <section id="calendario" class="content-section">
+                <h2>Calendário Acadêmico</h2>
+                <div class="calendar">
+                    <div class="calendar-header">
+                        <button id="prevMonthBtn">←</button>
+                        <span id="currentMonthYear">Junho 2025</span>
+                        <button id="nextMonthBtn">→</button>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="calendar-day-name">Dom</div>
+                        <div class="calendar-day-name">Seg</div>
+                        <div class="calendar-day-name">Ter</div>
+                        <div class="calendar-day-name">Qua</div>
+                        <div class="calendar-day-name">Qui</div>
+                        <div class="calendar-day-name">Sex</div>
+                        <div class="calendar-day-name">Sáb</div>
+                        </div>
+                    <p style="margin-top: 1.5rem; text-align: center; color: #555;">
+                        <span style="display: inline-block; width: 15px; height: 15px; border: 2px solid #dc3545; border-radius: 3px; vertical-align: middle; margin-right: 5px;"></span> = Dia com Evento
+                    </p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="contact-info">
+                <h3>Instituto Federal de Educação, Ciência e Tecnologia de Pernambuco</h3>
+                <div class="contact-item">
+                    <strong>Endereço:</strong> Av. Prof Luiz Freire, 500, Cidade Universitária - Recife-PE
+                </div>
+                <div class="contact-item">
+                    <strong>CEP:</strong> 50740-545
+                </div>
+                <div class="contact-item">
+                    <strong>Telefone:</strong> (81) 2125-1600
+                </div>
+                <div class="contact-item">
+                    <strong>Email:</strong> contato@engenhariasoftware.edu.br
+                </div>
+                <div class="contact-item" style="margin-top: 1rem;">
+                    <a href="#">Outros Contatos</a>
+                </div>
+            </div>
+            <div class="footer-right">
+                <div class="footer-social">
+                    <a href="https://www.facebook.com/IFPECampusBeloJardim?locale=pt_BR" class="social-link-footer" target="_blank">
+                        <img src="imagens/facebook-icon.png" alt="Facebook">
+                    </a>
+                    <a href="https://www.instagram.com/ifpecampusbelojardim/" class="social-link-footer" target="_blank">
+                        <img src="imagens/instagram-icon.png" alt="Instagram">
+                    </a>
+                    <a href="https://www.youtube.com/@CanalIFPE" class="social-link-footer" target="_blank">
+                        <img src="imagens/youtube-icon.png" alt="YouTube">
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userNameDisplay = document.getElementById('userName');
+            const sidebarUserName = document.getElementById('sidebarUserName');
+            const sidebarUserEmail = document.getElementById('sidebarUserEmail');
+            const sidebarUserType = document.getElementById('sidebarUserType');
+            const homeUserName = document.getElementById('homeUserName');
+            const homeUserEmail = document.getElementById('homeUserEmail');
+            const homeUserType = document.getElementById('homeUserType');
+            const homeUserMatricula = document.getElementById('homeUserMatricula');
+            const homeUserCurso = document.getElementById('homeUserCurso');
+            const homeUserPeriodo = document.getElementById('homeUserPeriodo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+            const contentSections = document.querySelectorAll('.content-section');
+
+            // --- Verificação de Autenticação ---
+            const authToken = localStorage.getItem('authToken');
+            const userType = localStorage.getItem('userType');
+
+            if (!authToken || userType !== 'aluno') {
+                // Se não houver token ou não for aluno, redireciona para o login
+                alert('Acesso negado. Por favor, faça login como aluno.'); // Usando alert provisório
+                window.location.href = '/login-aluno.html'; // CORRIGIDO: Adicionado '/'
+                return; // Interrompe a execução do script
+            }
+
+            // --- Carregar Dados do Usuário (Simulado ou Real) ---
+            // Em um sistema real, você faria uma requisição ao backend
+            // para buscar os detalhes completos do aluno usando o authToken.
+            // Por simplicidade, vamos usar dados simulados ou do localStorage se tiver.
+
+            let userData = {
+                nome_completo: 'Aluno Exemplo', // Será atualizado se o token tiver mais info
+                email: 'aluno@exemplo.com', // Será atualizado
+                tipo: 'aluno',
+                matricula: 'N/A',
+                curso: 'N/A',
+                periodo: 'N/A'
+            };
+
+            // Tentar decodificar o token JWT para pegar informações (sem validação, apenas para display)
+            try {
+                const payload = JSON.parse(atob(authToken.split('.')[1])); // Decodifica o payload do JWT
+                // console.log("Payload do token:", payload); // Para debug
+
+                // Fazer uma requisição ao backend para obter detalhes do aluno
+                // Substitua esta simulação por uma chamada real à sua API se tiver uma rota '/aluno/perfil'
+                const response = await fetch(`http://localhost:3000/usuarios/${payload.id}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                if (response.ok) {
+                    const apiUserData = await response.json();
+                    userData.nome_completo = apiUserData.nome_completo || userData.nome_completo;
+                    userData.email = apiUserData.email || userData.email;
+                    userData.tipo = apiUserData.tipo || userData.tipo;
+                    // Se houver dados de Aluno associados:
+                    if (apiUserData.aluno_info) {
+                        userData.matricula = apiUserData.aluno_info.matricula || userData.matricula;
+                        userData.curso = apiUserData.aluno_info.curso || userData.curso;
+                        userData.periodo = apiUserData.aluno_info.periodo || apiUserData.aluno_info.periodo === 0 ? apiUserData.aluno_info.periodo : userData.periodo; // Handle period 0
+                    }
+                } else {
+                    console.error('Falha ao buscar dados do usuário da API:', response.status);
+                    // Pode ser token inválido/expirado, forçar logout
+                    alert('Sua sessão expirou ou é inválida. Faça login novamente.');
+                    localStorage.clear();
+                    window.location.href = '/login-aluno.html'; // CORRIGIDO: Adicionado '/'
+                    return;
+                }
+            } catch (e) {
+                console.error('Erro ao decodificar token ou buscar dados:', e);
+                // Se o token estiver mal formatado ou houver erro, forçar logout
+                alert('Sua sessão é inválida. Faça login novamente.');
+                localStorage.clear();
+                window.location.href = '/login-aluno.html'; // CORRIGIDO: Adicionado '/'
+                return;
+            }
+
+            // Atualizar elementos da UI com os dados do usuário
+            userNameDisplay.textContent = `Olá, ${userData.nome_completo.split(' ')[0]}!`; // Exibe só o primeiro nome
+            sidebarUserName.textContent = userData.nome_completo;
+            sidebarUserEmail.textContent = userData.email;
+            sidebarUserType.textContent = userData.tipo.charAt(0).toUpperCase() + userData.tipo.slice(1); // Capitaliza o tipo
+
+            homeUserName.textContent = userData.nome_completo;
+            homeUserEmail.textContent = userData.email;
+            homeUserType.textContent = userData.tipo.charAt(0).toUpperCase() + userData.tipo.slice(1);
+            homeUserMatricula.textContent = userData.matricula;
+            homeUserCurso.textContent = userData.curso;
+            homeUserPeriodo.textContent = userData.periodo;
+            
+            // Também atualizar dados na seção de Matrícula
+            document.getElementById('matriculaNum').textContent = userData.matricula;
+            document.getElementById('matriculaCurso').textContent = userData.curso;
+            document.getElementById('matriculaPeriodo').textContent = userData.periodo;
+
+            // --- Funcionalidade de Logout ---
+            logoutBtn.addEventListener('click', () => {
+                localStorage.removeItem('authToken'); // Remove o token
+                localStorage.removeItem('userType'); // Remove o tipo de usuário
+                alert('Você foi desconectado.'); // Mensagem de feedback
+                window.location.href = '/index.html'; // CORRIGIDO: Adicionado '/'
+            });
+
+            // --- Navegação entre Seções ---
+            sidebarLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault(); // Evita o comportamento padrão do link
+                    const targetSectionId = link.getAttribute('data-section');
+
+                    // Remove 'active' de todos os links da sidebar
+                    sidebarLinks.forEach(item => item.classList.remove('active'));
+                    // Adiciona 'active' ao link clicado
+                    link.classList.add('active');
+
+                    // Esconde todas as seções de conteúdo
+                    contentSections.forEach(section => section.classList.remove('active'));
+                    // Mostra a seção de conteúdo alvo
+                    document.getElementById(targetSectionId).classList.add('active');
+                });
+            });
+
+            // --- Funcionalidade de Alterar Senha (Simulada) ---
+            const formAlterarSenha = document.getElementById('formAlterarSenha');
+            const senhaMessage = document.getElementById('senhaMessage');
+            formAlterarSenha.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+                senhaMessage.style.display = 'none';
+                senhaMessage.className = '';
+
+                if (newPassword !== confirmNewPassword) {
+                    senhaMessage.textContent = 'A nova senha e a confirmação não coincidem.';
+                    senhaMessage.classList.add('error');
+                    senhaMessage.style.display = 'block';
+                    return;
+                }
+
+                if (newPassword.length < 5) { // Exemplo de validação de senha
+                    senhaMessage.textContent = 'A nova senha deve ter no mínimo 5 caracteres.';
+                    senhaMessage.classList.add('error');
+                    senhaMessage.style.display = 'block';
+                    return;
+                }
+
+                // Simulação de chamada API para alterar senha
+                // Em um sistema real, você enviaria currentPassword, newPassword e authToken para uma rota /alterar-senha no backend
+                try {
+                    const response = await fetch('http://localhost:3000/alterar-senha', { // Rota fictícia
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}` // Enviaria o token
+                        },
+                        body: JSON.stringify({ currentPassword, newPassword })
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        senhaMessage.textContent = 'Senha alterada com sucesso!';
+                        senhaMessage.classList.add('success');
+                        formAlterarSenha.reset(); // Limpa o formulário
+                    } else {
+                        senhaMessage.textContent = data.error || 'Erro ao alterar senha. Verifique a senha atual.';
+                        senhaMessage.classList.add('error');
+                    }
+                } catch (err) {
+                    console.error('Erro na requisição de alterar senha:', err);
+                    senhaMessage.textContent = 'Não foi possível conectar ao servidor para alterar a senha.';
+                    senhaMessage.classList.add('error');
+                }
+                senhaMessage.style.display = 'block';
+            });
+
+            // --- Funcionalidade de Calendário ---
+            const currentMonthYearSpan = document.getElementById('currentMonthYear');
+            const calendarGrid = document.querySelector('#calendario .calendar-grid');
+            const prevMonthBtn = document.getElementById('prevMonthBtn');
+            const nextMonthBtn = document.getElementById('nextMonthBtn');
+
+            let currentMonth = new Date().getMonth();
+            let currentYear = new Date().getFullYear();
+
+            const renderCalendar = (month, year) => {
+                calendarGrid.innerHTML = ''; // Limpa os dias anteriores
+
+                // Adiciona os nomes dos dias da semana novamente
+                const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+                dayNames.forEach(day => {
+                    const div = document.createElement('div');
+                    div.classList.add('calendar-day-name');
+                    div.textContent = day;
+                    calendarGrid.appendChild(div);
+                });
+
+                const firstDayOfMonth = new Date(year, month, 1);
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+                const firstDayOfWeek = firstDayOfMonth.getDay(); // 0 = Domingo, 6 = Sábado
+
+                // Preenche os dias vazios antes do primeiro dia do mês
+                for (let i = 0; i < firstDayOfWeek; i++) {
+                    const div = document.createElement('div');
+                    div.classList.add('calendar-date');
+                    calendarGrid.appendChild(div);
+                }
+
+                // Preenche os dias do mês
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const div = document.createElement('div');
+                    div.classList.add('calendar-date');
+                    div.textContent = day;
+
+                    // Adiciona classe para dias do mês atual
+                    div.classList.add('current-month');
+
+                    // Marca o dia atual
+                    const today = new Date();
+                    if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                        div.classList.add('today');
+                    }
+
+                    // Exemplo de marcação de eventos (poderia vir de um backend)
+                    if ((month === 6 && day === 5) || (month === 6 && day === 15)) { // Exemplo: 5 e 15 de Julho
+                        div.classList.add('has-event');
+                    }
+
+                    calendarGrid.appendChild(div);
+                }
+
+                // Atualiza o mês e ano no cabeçalho
+                currentMonthYearSpan.textContent = new Date(year, month).toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+            };
+
+            prevMonthBtn.addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar(currentMonth, currentYear);
+            });
+
+            nextMonthBtn.addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar(currentMonth, currentYear);
+            });
+
+            // Renderiza o calendário inicial
+            renderCalendar(currentMonth, currentYear);
+        });
+    </script>
+</body>
+</html>

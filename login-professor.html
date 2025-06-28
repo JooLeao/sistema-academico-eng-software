@@ -302,12 +302,13 @@
                 if (response.ok) {
                     messageElement.textContent = 'Login realizado com sucesso!';
                     messageElement.classList.add('success');
-                    localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('userType', 'professor');
+                    localStorage.setItem('authToken', data.token); // Mantém o token
+                    localStorage.setItem('userType', data.usuario.tipo); // Garante que 'professor' seja salvo
+
+                    // Redireciona para a dashboard do professor
                     setTimeout(() => {
-                        alert('Redirecionando para o portal do professor...');
-                        // window.location.href = 'dashboard-professor.html';
-                    }, 1000);
+                        window.location.href = '/portal-professor.html'; // CORRIGIDO: Adicionado '/'
+                    }, 500); // Pequeno atraso para a mensagem ser visível
                 } else {
                     messageElement.textContent = data.error || 'Credenciais inválidas.';
                     messageElement.classList.add('error');

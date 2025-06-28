@@ -188,7 +188,6 @@
 </head>
 <body>
     <div class="container">
-        <!-- Painel Esquerdo -->
         <div class="left-panel">
             <div class="logo-section">
                 <div class="logo-container">
@@ -214,7 +213,6 @@
             </div>
         </div>
 
-        <!-- Painel Direito -->
         <div class="right-panel">
             <div class="form-container">
                 <div class="form-header">
@@ -268,11 +266,9 @@
             messageElement.className = '';
 
             try {
-                // ALTERAÇÃO PONTUAL: Corrigindo a URL para a rota correta do backend.
                 const response = await fetch('http://localhost:3000/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    // O body só precisa do email e da senha, como a API espera.
                     body: JSON.stringify({ email, senha })
                 });
 
@@ -282,17 +278,20 @@
                 if (response.ok) {
                     messageElement.textContent = 'Login realizado com sucesso!';
                     messageElement.classList.add('success');
+                    // Armazena o token e o tipo de usuário no localStorage
                     localStorage.setItem('authToken', data.token);
-                    localStorage.setItem('userType', 'aluno');
+                    localStorage.setItem('userType', data.usuario.tipo); 
+                    
+                    // Redireciona para a dashboard do aluno
                     setTimeout(() => {
-                        alert('Redirecionando para o portal do aluno...');
-                        // window.location.href = 'dashboard-aluno.html';
-                    }, 1000);
+                        window.location.href = '/portal-aluno.html'; // CORRIGIDO: Adicionado '/'
+                    }, 500); // Pequeno atraso para a mensagem ser visível
                 } else {
                     messageElement.textContent = data.error || 'Credenciais inválidas.';
                     messageElement.classList.add('error');
                 }
-            } catch (error) {
+            }
+             catch (error) {
                 container.classList.remove('loading');
                 messageElement.textContent = 'Não foi possível conectar ao servidor. Tente novamente mais tarde.';
                 messageElement.classList.add('error');
