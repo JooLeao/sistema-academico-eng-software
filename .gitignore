@@ -33,3 +33,7 @@ Thumbs.db
 .idea
 .vscode/
 *.swp
+
+# Arquivos e pastas do projeto que não devem ser rastreados pelo Git (SEU SISTEMA ACADÊMICO)
+index.html      # Ignora o arquivo index.html
+imagens/        # Ignora a pasta de imagens e todo o seu conteúdo
