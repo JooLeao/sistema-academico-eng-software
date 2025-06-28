@@ -81,11 +81,11 @@
         .social-link-header {
             width: 35px; height: 35px; border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
-            background: white; transition: transform 0.3s ease;
+            transition: transform 0.3s ease;
             overflow: hidden; border: 1px solid #000000;
         }
         .social-link-header:hover {
-            transform: translateY(-2px); background: #f0f0f0;
+            transform: translateY(-2px); background: #ffffff;
         }
         .social-link-header img {
             width: 20px; height: 20px; object-fit: contain;
@@ -124,7 +124,7 @@
         .sidebar {
             width: 300px; background: white; border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1); padding: 1.5rem;
-            height: fit-content; position: sticky; top: 220px;
+            height: fit-content; position: sticky; top: 150px;
             border: 1px solid #ddd;
         }
         .sidebar-section {
@@ -163,12 +163,6 @@
             margin: 0 auto; color: #2F4F2F; font-size: 0.85rem;
             text-align: center; line-height: 1.3; font-weight: 500;
             position: relative; overflow: hidden;
-        }
-        .qr-placeholder::before {
-            content: "📱";
-            font-size: 2rem;
-            display: block;
-            margin-bottom: 0.5rem;
         }
         .qr-image {
             width: 100%; height: 100%; object-fit: cover;
@@ -516,7 +510,7 @@
         .social-link-footer {
             width: 40px; height: 40px; border-radius: 6px;
             display: flex; align-items: center; justify-content: center;
-            background: white; transition: transform 0.3s ease;
+            transition: transform 0.3s ease;
             overflow: hidden; border: 1px solid #000000;
         }
         .social-link-footer:hover {
@@ -624,7 +618,6 @@
     <header class="header" id="header">
         <div class="header-content">
             <div class="logo-header">
-                <!-- 📍 COLOQUE SUA IMAGEM DO LOGO AQUI: imagens/logo-engenharia.png -->
                 <img src="imagens/logo-engenharia.png" alt="Logo Engenharia Software">
                 <div class="logo-text">
                     <h1>Sistema Acadêmico</h1>
@@ -661,7 +654,7 @@
             <div class="nav-menu">
                 <a href="#inicio">Início</a>
                 <a href="#sobre">Sobre</a>
-                <a href="#ingresso">Ingresso</a>
+                <a href="https://ingresso.ifpe.edu.br/inscricao/">Ingresso</a>
                 <a href="#noticias">Notícias</a>
                 <a href="#galeria">Galeria</a>
                 <a href="login-aluno.html">Login Aluno</a>
@@ -676,19 +669,9 @@
         <aside class="sidebar">
             <!-- QR Code Section -->
             <div class="qr-section">
-                <h4>Acesso Rápido</h4>
+                <h4>Consulte o cadastro de Instituto no e-MEC</h4>
                 <div class="qr-placeholder">
-                    <!-- 📍 COLOQUE SUA IMAGEM DO QR CODE AQUI -->
-                    <!-- Substitua o conteúdo abaixo por: <img src="imagens/qr-code.png" alt="QR Code" class="qr-image"> -->
-                    Coloque seu<br>QR Code aqui<br>
-                    <small>(150x150px)</small>
-                </div>
-                <p>Escaneie para acesso mobile</p>
-                <div class="qr-instructions">
-                    <strong>📁 Para adicionar o QR Code:</strong><br>
-                    1. Salve sua imagem como "qr-code.png" na pasta "imagens/"<br>
-                    2. Substitua o conteúdo do div "qr-placeholder" por:<br>
-                    &lt;img src="imagens/qr-code.png" alt="QR Code" class="qr-image"&gt;
+                    <img src="imagens/qr-code-mec.png" alt="QR Code" class="qr-image">
                 </div>
             </div>
 
@@ -699,8 +682,6 @@
                     <li><a href="login-aluno.html">Portal do Aluno</a></li>
                     <li><a href="login-professor.html">Portal do Professor</a></li>
                     <li><a href="esqueceu-senha.html">Recuperar Senha</a></li>
-                    <li><a href="#noticias">Notícias</a></li>
-                    <li><a href="#galeria">Galeria</a></li>
                 </ul>
             </div>
 
@@ -712,10 +693,9 @@
                 </div>
                 <div class="expandable-content">
                     <ul class="sidebar-links">
-                        <li><a href="https://SEU_LINK_VESTIBULAR">Vestibular 2024</a></li>
-                        <li><a href="https://SEU_LINK_ENEM">ENEM</a></li>
-                        <li><a href="https://SEU_LINK_TRANSFERENCIA">Transferência</a></li>
-                        <li><a href="https://SEU_LINK_DIPLOMA">Portador de Diploma</a></li>
+                        <li><a href="https://ingresso.ifpe.edu.br/inscricao/">Inscrição e Data</a></li>
+                        <li><a href="https://ingresso.ifpe.edu.br/media/Edital_REI.IFPE_n_23.2024_-_Ingresso_2024.2_retifica%C3%A7%C3%A3o_29.08.pdf">Edital e Informações</a></li>
+                        <li><a href="https://ingresso.ifpe.edu.br/inscricao/login/?next=/">Acompanhe sua Inscrição</a></li>
                     </ul>
                 </div>
             </div>
@@ -728,9 +708,8 @@
                 <div class="expandable-content">
                     <ul class="sidebar-links">
                         <li><a href="#sobre">Sobre o Curso</a></li>
-                        <li><a href="#corpo-docente">Corpo Docente</a></li>
-                        <li><a href="#infraestrutura">Infraestrutura</a></li>
-                        <li><a href="#projetos">Projetos</a></li>
+                        <li><a href="#galeria">Galeria</a></li>
+                        <li><a href="#noticias">Eventos e Notícias</a></li>
                     </ul>
                 </div>
             </div>
@@ -754,22 +733,9 @@
             <section class="content-section" id="sobre">
                 <div class="section-title">
                     <h2>Sobre o Curso</h2>
-                    <p>Formamos profissionais capacitados para desenvolver soluções tecnológicas que transformam o mundo</p>
-                </div>
-                
-                <div class="cards-grid">
-                    <div class="card">
-                        <h3>Inovação</h3>
-                        <p>Metodologias modernas e tecnologias de ponta para formar profissionais preparados para o mercado atual.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Qualidade</h3>
-                        <p>Corpo docente altamente qualificado e infraestrutura completa para o melhor aprendizado.</p>
-                    </div>
-                    <div class="card">
-                        <h3>Mercado</h3>
-                        <p>Conexão direta com o mercado de trabalho através de parcerias e projetos práticos.</p>
-                    </div>
+                    <p>Torne-se um dos profissionais mais disputados do mercado cursando Engenharia de Software no IFPE Campus Belo Jardim, o seu lugar para uma carreira de sucesso no coração do Agreste. Nossa graduação une a excelência acadêmica, atestada pela nota 4 na rigorosa avaliação do MEC, com uma conexão direta e poderosa com o mercado de trabalho através da parceria estratégica com o Grupo Moura. 
+                    <br> Isso significa que, além de uma base teórica sólida com professores qualificados, você terá a oportunidade única de participar de projetos reais e estágios em uma das maiores empresas do país.Você estará se juntando a uma instituição com um legado de transformação. O IFPE faz parte da Rede Federal de Educação, cuja história remonta a 1909, com mais de um século de tradição na formação profissional que muda vidas. O campus Belo Jardim, inaugurado em 2014, é um capítulo mais recente dessa história de sucesso, representando um compromisso sólido e moderno com o desenvolvimento do Agreste Pernambucano. </br> 
+                    </p>
                 </div>
             </section>
 
@@ -797,54 +763,54 @@
                     </article>
                     
                     <article class="news-card">
-                        <img src="/placeholder.svg?height=250&width=400" alt="Novo Laboratório">
+                        <img src="imagens/moura-tech.jpeg" alt="Moura Tech">
                         <div class="news-content">
                             <div class="news-category">Notícias</div>
-                            <div class="news-date">10 de Janeiro, 2024</div>
-                            <h3>Inauguração do Novo Laboratório de IA</h3>
-                            <p>Espaço equipado com tecnologia de ponta para pesquisa em inteligência artificial. O laboratório conta com servidores de alta performance, GPUs dedicadas e ambiente preparado para desenvolvimento de projetos de machine learning e deep learning.</p>
+                            <div class="news-date">14 de Maio, 2025</div>
+                            <h3>Novas Turmas do Moura Tech</h3>
+                            <p>Em uma parceria de sucesso, o IFPE e a Moura anunciam a expansão do programa Moura Tech para o curso de Engenharia de Software com duas novas turmas que iniciam este mês: Dados & Inteligência Artificial e Segurança & Sistemas de Informação. O professor e coordenador João Almeida celebra o crescimento do projeto, destacando o forte engajamento dos alunos. A iniciativa reforça o compromisso de capacitar jovens talentos para o mercado de tecnologia na região, unindo formação acadêmica de ponta e oportunidades na indústria.</p>
                         </div>
                     </article>
                     
                     <article class="news-card">
-                        <img src="/placeholder.svg?height=250&width=400" alt="Parceria Empresas">
+                        <img src="imagens/noticias-img-02.jpeg" alt="55 anos IFPE">
                         <div class="news-content">
                             <div class="news-category">Notícias</div>
-                            <div class="news-date">05 de Janeiro, 2024</div>
-                            <h3>Novas Parcerias com Empresas de Tech</h3>
-                            <p>Ampliação das oportunidades de estágio e emprego para nossos estudantes. Foram firmados acordos com 15 empresas do setor tecnológico, oferecendo vagas de estágio, trainee e efetivação para recém-formados.</p>
+                            <div class="news-date">02 de Maio, 2025</div>
+                            <h3>IFPE lança programação especial para celebrar seus 55 anos</h3>
+                            <p>O IFPE Belo Jardim lançou, nesta sexta-feira (2), uma programação especial visando celebrar os 55 anos de existência do Campus. A programação acontecerá durante vários dias da próxima semana e contará com exposições fotográficas, apresentações culturais, inaugurações, premiações, atividades religiosas e mesa redonda com aposentados, dentre outras atividades.</p>
                         </div>
                     </article>
                 </div>
 
                 <div class="news-grid" id="eventos-content" style="display: none;">
                     <article class="news-card">
-                        <img src="/placeholder.svg?height=250&width=400" alt="Semana da Tecnologia">
+                        <img src="imagens/eventos-img-01.jpeg" alt="Curso de Programação">
                         <div class="news-content">
                             <div class="event-tag">EVENTO</div>
-                            <div class="news-date">25-29 de Março, 2024</div>
-                            <h3>Semana da Tecnologia 2024</h3>
-                            <p>Palestras, workshops e minicursos sobre as últimas tendências em tecnologia. Evento gratuito aberto à comunidade acadêmica e profissionais da área.</p>
+                            <div class="news-date">27 de Junho, 2025</div>
+                            <h3>A ETH Kipu está com uma oportunidade imperdível para quem quer aprender programação Blockchain!</h3>
+                            <p>Palestras, workshops e minicursos sobre as últimas tendências em tecnologia. Evento gratuito aberto à comunidade acadêmica e profissionais da área. Mais de 600 desenvolvedores já passaram por essa formação em 15 cidades e 10 países da América Latina. Agora é a sua chance! Essa iniciativa faz parte do #EsquentaETHLatam, uma série de atividades promovidas pela ETH Kipu antes do ETH Latam São Paulo 2025 , o maior evento de Ethereum da América Latina, que acontecerá em novembro, em São Paulo. </p>
                         </div>
                     </article>
                     
                     <article class="news-card">
-                        <img src="/placeholder.svg?height=250&width=400" alt="Feira de Estágios">
+                        <img src="imagens/eventos-img-02.jpg" alt="Gemini">
                         <div class="news-content">
                             <div class="event-tag">EVENTO</div>
-                            <div class="news-date">15 de Abril, 2024</div>
-                            <h3>Feira de Estágios e Empregos</h3>
-                            <p>Conecte-se com as principais empresas de tecnologia da região. Oportunidades de estágio, trainee e vagas efetivas para estudantes e recém-formados.</p>
+                            <div class="news-date">14 de Junho, 2025</div>
+                            <h3>Gemini PRO gratuito para estudantes</h3>
+                            <p>Estudantes podem se preparar para provas, aprimorar a escrita e otimizar os trabalhos de casa com um upgrade gratuito para o plano Google AI Pro. A oferta, disponível no Brasil, dá acesso ao aplicativo Gemini, ao NotebookLM e ao Whisk, além de 2TB de armazenamento. Para aproveitar, é preciso se inscrever até 30 de junho de 2025 e comprovar o status de estudante com um e-mail escolar válido quando solicitado. </p>
                         </div>
                     </article>
                     
                     <article class="news-card">
-                        <img src="/placeholder.svg?height=250&width=400" alt="Palestra DevOps">
+                        <img src="imagens/eventos-img-03.jpeg" alt="IDEATHON">
                         <div class="news-content">
-                            <div class="event-tag">PALESTRA</div>
-                            <div class="news-date">20 de Abril, 2024</div>
-                            <h3>DevOps na Prática</h3>
-                            <p>Palestra com especialista sobre implementação de DevOps em projetos reais. Aprenda sobre automação, integração contínua e melhores práticas.</p>
+                            <div class="event-tag">EVENTO</div>
+                            <div class="news-date">03 de Junho, 2025</div>
+                            <h3>IDEATHON Agreste Criativo</h3>
+                            <p>Nos dias 03 e 04 de junho, o IFPE Belo Jardim sediou o Ideathon Agreste Criativo. O evento reuniu mentes inovadoras para criar soluções de impacto real na região do Agreste. A iniciativa, que teve vagas limitadas, foi uma realização do Porto Digital, Armazém da Criatividade, Sebrae e Jardim Digital, com apoio da Prefeitura de Belo Jardim, e buscou fomentar a inovação local.</p>
                         </div>
                     </article>
                 </div>
@@ -857,65 +823,56 @@
                     <p>Conheça nossa infraestrutura e atividades acadêmicas - Clique nas imagens para expandir</p>
                 </div>
                 
-                <!-- 📍 ADICIONE SUAS FOTOS AQUI -->
                 <div class="gallery-grid">
                     <div class="gallery-item" onclick="openModal(0)">
-                        <img src="/placeholder.svg?height=200&width=300" alt="Laboratório de Informática" data-full="/placeholder.svg?height=600&width=800">
+                        <img src="imagens/galeria6.jpeg" alt="Salas Moura Tech" data-full="imagens/galeria6.jpeg">
                         <div class="gallery-overlay">
-                            <h4>Laboratório de Informática</h4>
-                            <p>Equipamentos modernos para desenvolvimento</p>
+                            <h4>Salas Moura Tech</h4>
+                            <p>Salas confortáveis preparadas para aprendizagem e discussão</p>
                         </div>
                     </div>
                     
                     <div class="gallery-item" onclick="openModal(1)">
-                        <img src="/placeholder.svg?height=200&width=300" alt="Sala de Aula" data-full="/placeholder.svg?height=600&width=800">
+                        <img src="imagens/galeria5.jpeg" alt="Bloco de Engenharia" data-full="imagens/galeria5.jpeg">
                         <div class="gallery-overlay">
-                            <h4>Salas de Aula</h4>
-                            <p>Ambientes preparados para aprendizagem</p>
+                            <h4>Bloco de Engenharia</h4>
+                            <p>Bloco com toda a infraestrutura necessária para aulas e reuniões</p>
                         </div>
                     </div>
                     
                     <div class="gallery-item" onclick="openModal(2)">
-                        <img src="/placeholder.svg?height=200&width=300" alt="Biblioteca" data-full="/placeholder.svg?height=600&width=800">
+                        <img src="imagens/galeria4.jpeg" alt="Bloco D" data-full="imagens/galeria4.jpeg">
                         <div class="gallery-overlay">
-                            <h4>Biblioteca</h4>
-                            <p>Acervo completo e espaço de estudos</p>
+                            <h4>Sala de Computadores Bloco D</h4>
+                            <p>Sala de Aula com 30 máquinas prontas para pesquisas e projetos</p>
                         </div>
                     </div>
                     
                     <div class="gallery-item" onclick="openModal(3)">
-                        <img src="/placeholder.svg?height=200&width=300" alt="Laboratório de Redes" data-full="/placeholder.svg?height=600&width=800">
+                        <img src="imagens/galeria3.jpeg" alt="Sala Moura Tech 2" data-full="imagens/galeria3.jpeg">
                         <div class="gallery-overlay">
-                            <h4>Laboratório de Redes</h4>
-                            <p>Infraestrutura para estudos de redes</p>
+                            <h4>Sala Nova do Moura Tech</h4>
+                            <p>Outra sala de aulas e reuniões com impressoras 3D e bancadas de acionamento de motores</p>
                         </div>
                     </div>
                     
                     <div class="gallery-item" onclick="openModal(4)">
-                        <img src="/placeholder.svg?height=200&width=300" alt="Área de Convivência" data-full="/placeholder.svg?height=600&width=800">
+                        <img src="imagens/galeria2.jpeg" alt="Sala de Aula" data-full="imagens/galeria2.jpeg">
                         <div class="gallery-overlay">
-                            <h4>Área de Convivência</h4>
-                            <p>Espaços para interação e descanso</p>
+                            <h4>Sala de Aula</h4>
+                            <p>Espaço para aulas, provas e apresentações</p>
                         </div>
                     </div>
                     
                     <div class="gallery-item" onclick="openModal(5)">
-                        <img src="/placeholder.svg?height=200&width=300" alt="Auditório" data-full="/placeholder.svg?height=600&width=800">
+                        <img src="imagens/galeria1.jpeg" alt="Auditório" data-full="imagens/galeria1.jpeg">
                         <div class="gallery-overlay">
-                            <h4>Auditório</h4>
-                            <p>Local para eventos e palestras</p>
+                            <h4>Bloco C</h4>
+                            <p>Entrada para o bloco C dando acesso as salas e banheiros</p>
                         </div>
                     </div>
                 </div>
                 
-                <div style="margin-top: 2rem; padding: 1rem; background: #e8f5e8; border-radius: 8px; border-left: 4px solid #2F4F2F;">
-                    <h4 style="color: #2F4F2F; margin-bottom: 0.5rem;">📁 Para adicionar suas fotos:</h4>
-                    <p style="color: #2F4F2F; font-size: 0.9rem; margin: 0;">
-                        1. Salve suas imagens na pasta "imagens/" (ex: lab1.jpg, sala1.jpg)<br>
-                        2. Substitua os src="/placeholder.svg..." pelas suas imagens<br>
-                        3. Atualize os textos e descrições conforme necessário
-                    </p>
-                </div>
             </section>
         </main>
     </div>
@@ -938,39 +895,30 @@
     <footer class="footer">
         <div class="footer-container">
             <div class="contact-info">
-                <h3>Instituto Federal de Educação, Ciência e Tecnologia de Pernambuco</h3>
+                <h3>Instituto Federal de Pernambuco - Campus Belo Jardim</h3>
                 <div class="contact-item">
-                    <strong>Endereço:</strong> Av. Prof Luiz Freire, 500, Cidade Universitária - Recife-PE
+                    <strong>Endereço:</strong> Av. Sebastião Rodrigues da Costa
                 </div>
                 <div class="contact-item">
-                    <strong>CEP:</strong> 50740-545
+                    <strong>CEP:</strong> 55155-730
                 </div>
                 <div class="contact-item">
-                    <strong>Telefone:</strong> (81) 2125-1600
+                    <strong>Contato:</strong> (81) 3878-2101
                 </div>
                 <div class="contact-item">
-                    <strong>Email:</strong> contato@engenhariasoftware.edu.br
-                </div>
-                <div class="contact-item" style="margin-top: 1rem;">
-                    <a href="#">Outros Contatos</a>
+                    <strong>Email:</strong> ascom@belojardim.ifpe.edu.br
                 </div>
             </div>
             <div class="footer-right">
                 <div class="footer-social">
-                    <a href="https://facebook.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
-                        <img src="/placeholder.svg?height=24&width=24" alt="Facebook">
+                    <a href="https://www.facebook.com/IFPECampusBeloJardim?locale=pt_BR" class="social-link-footer" target="_blank">
+                        <img src="imagens/faceook-icon.png" alt="Facebook">
                     </a>
-                    <a href="https://instagram.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
-                        <img src="/placeholder.svg?height=24&width=24" alt="Instagram">
+                    <a href="https://www.instagram.com/ifpecampusbelojardim/" class="social-link-footer" target="_blank">
+                        <img src="imagens/instagram-icon.png" alt="Instagram">
                     </a>
-                    <a href="https://youtube.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
-                        <img src="/placeholder.svg?height=24&width=24" alt="YouTube">
-                    </a>
-                    <a href="https://linkedin.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
-                        <img src="/placeholder.svg?height=24&width=24" alt="LinkedIn">
-                    </a>
-                    <a href="https://twitter.com/SEU_LINK_AQUI" class="social-link-footer" target="_blank">
-                        <img src="/placeholder.svg?height=24&width=24" alt="Twitter">
+                    <a href="https://www.youtube.com/@CanalIFPE" class="social-link-footer" target="_blank">
+                        <img src="imagens/youtube-icon.png" alt="YouTube">
                     </a>
                 </div>
             </div>
