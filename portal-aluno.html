@@ -708,7 +708,7 @@
             <div class="footer-right">
                 <div class="footer-social">
                     <a href="https://www.facebook.com/IFPECampusBeloJardim?locale=pt_BR" class="social-link-footer" target="_blank">
-                        <img src="imagens/facebook-icon.png" alt="Facebook">
+                        <img src="imagens/faceook-icon.png" alt="Facebook">
                     </a>
                     <a href="https://www.instagram.com/ifpecampusbelojardim/" class="social-link-footer" target="_blank">
                         <img src="imagens/instagram-icon.png" alt="Instagram">
@@ -722,265 +722,226 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async () => {
-            const userNameDisplay = document.getElementById('userName');
-            const sidebarUserName = document.getElementById('sidebarUserName');
-            const sidebarUserEmail = document.getElementById('sidebarUserEmail');
-            const sidebarUserType = document.getElementById('sidebarUserType');
-            const homeUserName = document.getElementById('homeUserName');
-            const homeUserEmail = document.getElementById('homeUserEmail');
-            const homeUserType = document.getElementById('homeUserType');
-            const homeUserMatricula = document.getElementById('homeUserMatricula');
-            const homeUserCurso = document.getElementById('homeUserCurso');
-            const homeUserPeriodo = document.getElementById('homeUserPeriodo');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
-            const contentSections = document.querySelectorAll('.content-section');
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Seletores de elementos da UI
+        const userNameDisplay = document.getElementById('userName');
+        const sidebarUserName = document.getElementById('sidebarUserName');
+        const sidebarUserEmail = document.getElementById('sidebarUserEmail');
+        const sidebarUserType = document.getElementById('sidebarUserType');
+        const homeUserName = document.getElementById('homeUserName');
+        const homeUserEmail = document.getElementById('homeUserEmail');
+        const homeUserType = document.getElementById('homeUserType');
+        const homeUserMatricula = document.getElementById('homeUserMatricula');
+        const homeUserCurso = document.getElementById('homeUserCurso');
+        const homeUserPeriodo = document.getElementById('homeUserPeriodo');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const sidebarLinks = document.querySelectorAll('.sidebar-menu a');
+        const contentSections = document.querySelectorAll('.content-section');
+        const boletimTableBody = document.querySelector('#boletim .boletim-table tbody');
 
-            // --- Verificação de Autenticação ---
-            const authToken = localStorage.getItem('authToken');
-            const userType = localStorage.getItem('userType');
+        // --- Verificação de Autenticação ---
+        const authToken = localStorage.getItem('authToken');
+        const userType = localStorage.getItem('userType');
 
-            if (!authToken || userType !== 'aluno') {
-                // Se não houver token ou não for aluno, redireciona para o login
-                alert('Acesso negado. Por favor, faça login como aluno.'); // Usando alert provisório
-                window.location.href = '/login-aluno.html'; // CORRIGIDO: Adicionado '/'
-                return; // Interrompe a execução do script
-            }
+        if (!authToken || userType !== 'aluno') {
+            alert('Acesso negado. Por favor, faça login como aluno.');
+            window.location.href = '/login-aluno.html';
+            return;
+        }
 
-            // --- Carregar Dados do Usuário (Simulado ou Real) ---
-            // Em um sistema real, você faria uma requisição ao backend
-            // para buscar os detalhes completos do aluno usando o authToken.
-            // Por simplicidade, vamos usar dados simulados ou do localStorage se tiver.
+        // --- Carregar Dados do Usuário ---
+        try {
+            const payload = JSON.parse(atob(authToken.split('.')[1]));
+            const response = await fetch(`http://localhost:3000/usuarios/${payload.id}`, {
+                headers: { 'Authorization': `Bearer ${authToken}` }
+            });
 
-            let userData = {
-                nome_completo: 'Aluno Exemplo', // Será atualizado se o token tiver mais info
-                email: 'aluno@exemplo.com', // Será atualizado
-                tipo: 'aluno',
-                matricula: 'N/A',
-                curso: 'N/A',
-                periodo: 'N/A'
+            if (!response.ok) throw new Error('Sessão inválida ou expirada');
+
+            const apiUserData = await response.json();
+            const userData = {
+                nome_completo: apiUserData.nome_completo || 'Aluno Exemplo',
+                email: apiUserData.email || 'aluno@exemplo.com',
+                tipo: apiUserData.tipo || 'aluno',
+                matricula: apiUserData.aluno_info?.matricula || 'N/A',
+                curso: apiUserData.aluno_info?.curso || 'N/A',
+                periodo: apiUserData.aluno_info?.periodo ?? 'N/A'
             };
 
-            // Tentar decodificar o token JWT para pegar informações (sem validação, apenas para display)
-            try {
-                const payload = JSON.parse(atob(authToken.split('.')[1])); // Decodifica o payload do JWT
-                // console.log("Payload do token:", payload); // Para debug
-
-                // Fazer uma requisição ao backend para obter detalhes do aluno
-                // Substitua esta simulação por uma chamada real à sua API se tiver uma rota '/aluno/perfil'
-                const response = await fetch(`http://localhost:3000/usuarios/${payload.id}`, {
-                    headers: {
-                        'Authorization': `Bearer ${authToken}`
-                    }
-                });
-                if (response.ok) {
-                    const apiUserData = await response.json();
-                    userData.nome_completo = apiUserData.nome_completo || userData.nome_completo;
-                    userData.email = apiUserData.email || userData.email;
-                    userData.tipo = apiUserData.tipo || userData.tipo;
-                    // Se houver dados de Aluno associados:
-                    if (apiUserData.aluno_info) {
-                        userData.matricula = apiUserData.aluno_info.matricula || userData.matricula;
-                        userData.curso = apiUserData.aluno_info.curso || userData.curso;
-                        userData.periodo = apiUserData.aluno_info.periodo || apiUserData.aluno_info.periodo === 0 ? apiUserData.aluno_info.periodo : userData.periodo; // Handle period 0
-                    }
-                } else {
-                    console.error('Falha ao buscar dados do usuário da API:', response.status);
-                    // Pode ser token inválido/expirado, forçar logout
-                    alert('Sua sessão expirou ou é inválida. Faça login novamente.');
-                    localStorage.clear();
-                    window.location.href = '/login-aluno.html'; // CORRIGIDO: Adicionado '/'
-                    return;
-                }
-            } catch (e) {
-                console.error('Erro ao decodificar token ou buscar dados:', e);
-                // Se o token estiver mal formatado ou houver erro, forçar logout
-                alert('Sua sessão é inválida. Faça login novamente.');
-                localStorage.clear();
-                window.location.href = '/login-aluno.html'; // CORRIGIDO: Adicionado '/'
-                return;
-            }
-
-            // Atualizar elementos da UI com os dados do usuário
-            userNameDisplay.textContent = `Olá, ${userData.nome_completo.split(' ')[0]}!`; // Exibe só o primeiro nome
+            // Atualizar UI com dados do usuário
+            userNameDisplay.textContent = `Olá, ${userData.nome_completo.split(' ')[0]}!`;
             sidebarUserName.textContent = userData.nome_completo;
             sidebarUserEmail.textContent = userData.email;
-            sidebarUserType.textContent = userData.tipo.charAt(0).toUpperCase() + userData.tipo.slice(1); // Capitaliza o tipo
-
+            sidebarUserType.textContent = userData.tipo.charAt(0).toUpperCase() + userData.tipo.slice(1);
             homeUserName.textContent = userData.nome_completo;
             homeUserEmail.textContent = userData.email;
             homeUserType.textContent = userData.tipo.charAt(0).toUpperCase() + userData.tipo.slice(1);
             homeUserMatricula.textContent = userData.matricula;
             homeUserCurso.textContent = userData.curso;
             homeUserPeriodo.textContent = userData.periodo;
-            
-            // Também atualizar dados na seção de Matrícula
             document.getElementById('matriculaNum').textContent = userData.matricula;
             document.getElementById('matriculaCurso').textContent = userData.curso;
             document.getElementById('matriculaPeriodo').textContent = userData.periodo;
 
-            // --- Funcionalidade de Logout ---
-            logoutBtn.addEventListener('click', () => {
-                localStorage.removeItem('authToken'); // Remove o token
-                localStorage.removeItem('userType'); // Remove o tipo de usuário
-                alert('Você foi desconectado.'); // Mensagem de feedback
-                window.location.href = '/index.html'; // CORRIGIDO: Adicionado '/'
-            });
+        } catch (e) {
+            console.error('Erro ao decodificar token ou buscar dados:', e);
+            alert('Sua sessão é inválida. Faça login novamente.');
+            localStorage.clear();
+            window.location.href = '/login-aluno.html';
+            return;
+        }
 
-            // --- Navegação entre Seções ---
-            sidebarLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault(); // Evita o comportamento padrão do link
-                    const targetSectionId = link.getAttribute('data-section');
+        // --- Funcionalidade de Logout ---
+        logoutBtn.addEventListener('click', () => {
+            localStorage.clear();
+            alert('Você foi desconectado.');
+            window.location.href = '/index.html';
+        });
 
-                    // Remove 'active' de todos os links da sidebar
-                    sidebarLinks.forEach(item => item.classList.remove('active'));
-                    // Adiciona 'active' ao link clicado
-                    link.classList.add('active');
-
-                    // Esconde todas as seções de conteúdo
-                    contentSections.forEach(section => section.classList.remove('active'));
-                    // Mostra a seção de conteúdo alvo
-                    document.getElementById(targetSectionId).classList.add('active');
-                });
-            });
-
-            // --- Funcionalidade de Alterar Senha (Simulada) ---
-            const formAlterarSenha = document.getElementById('formAlterarSenha');
-            const senhaMessage = document.getElementById('senhaMessage');
-            formAlterarSenha.addEventListener('submit', async (e) => {
+        // --- Navegação entre Seções ---
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
                 e.preventDefault();
-                const currentPassword = document.getElementById('currentPassword').value;
-                const newPassword = document.getElementById('newPassword').value;
-                const confirmNewPassword = document.getElementById('confirmNewPassword').value;
-
-                senhaMessage.style.display = 'none';
-                senhaMessage.className = '';
-
-                if (newPassword !== confirmNewPassword) {
-                    senhaMessage.textContent = 'A nova senha e a confirmação não coincidem.';
-                    senhaMessage.classList.add('error');
-                    senhaMessage.style.display = 'block';
-                    return;
-                }
-
-                if (newPassword.length < 5) { // Exemplo de validação de senha
-                    senhaMessage.textContent = 'A nova senha deve ter no mínimo 5 caracteres.';
-                    senhaMessage.classList.add('error');
-                    senhaMessage.style.display = 'block';
-                    return;
-                }
-
-                // Simulação de chamada API para alterar senha
-                // Em um sistema real, você enviaria currentPassword, newPassword e authToken para uma rota /alterar-senha no backend
-                try {
-                    const response = await fetch('http://localhost:3000/alterar-senha', { // Rota fictícia
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${authToken}` // Enviaria o token
-                        },
-                        body: JSON.stringify({ currentPassword, newPassword })
-                    });
-
-                    const data = await response.json();
-                    if (response.ok) {
-                        senhaMessage.textContent = 'Senha alterada com sucesso!';
-                        senhaMessage.classList.add('success');
-                        formAlterarSenha.reset(); // Limpa o formulário
-                    } else {
-                        senhaMessage.textContent = data.error || 'Erro ao alterar senha. Verifique a senha atual.';
-                        senhaMessage.classList.add('error');
-                    }
-                } catch (err) {
-                    console.error('Erro na requisição de alterar senha:', err);
-                    senhaMessage.textContent = 'Não foi possível conectar ao servidor para alterar a senha.';
-                    senhaMessage.classList.add('error');
-                }
-                senhaMessage.style.display = 'block';
+                const targetSectionId = link.getAttribute('data-section');
+                activateSection(targetSectionId);
             });
+        });
 
-            // --- Funcionalidade de Calendário ---
-            const currentMonthYearSpan = document.getElementById('currentMonthYear');
-            const calendarGrid = document.querySelector('#calendario .calendar-grid');
-            const prevMonthBtn = document.getElementById('prevMonthBtn');
-            const nextMonthBtn = document.getElementById('nextMonthBtn');
+        function activateSection(sectionId) {
+            sidebarLinks.forEach(item => item.classList.remove('active'));
+            document.querySelector(`a[data-section="${sectionId}"]`).classList.add('active');
 
-            let currentMonth = new Date().getMonth();
-            let currentYear = new Date().getFullYear();
+            contentSections.forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
 
-            const renderCalendar = (month, year) => {
-                calendarGrid.innerHTML = ''; // Limpa os dias anteriores
+            if (sectionId === 'boletim') {
+                loadBoletim();
+            }
+        }
+        
+        // --- Carregar Boletim Dinamicamente ---
+        async function loadBoletim() {
+            boletimTableBody.innerHTML = `<tr><td colspan="6">Carregando notas...</td></tr>`;
+            try {
+                const response = await fetch('http://localhost:3000/alunos/boletim', {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+                if (!response.ok) throw new Error('Falha ao carregar boletim');
+                
+                const notas = await response.json();
+                boletimTableBody.innerHTML = '';
+                
+                if (notas.length > 0) {
+                    notas.forEach(item => {
+                        const row = document.createElement('tr');
+                        const statusClass = `status-${item.status}`;
+                        row.innerHTML = `
+                            <td>${item.disciplina_nome}</td>
+                            <td>${item.nota1 ?? 'N/A'}</td>
+                            <td>${item.nota2 ?? 'N/A'}</td>
+                            <td>${item.media_final ?? 'N/A'}</td>
+                            <td>${item.frequencia ?? 'N/A'}%</td>
+                            <td class="${statusClass}">${item.status.charAt(0).toUpperCase() + item.status.slice(1)}</td>
+                        `;
+                        boletimTableBody.appendChild(row);
+                    });
+                } else {
+                    boletimTableBody.innerHTML = `<tr><td colspan="6">Nenhuma disciplina encontrada em seu boletim.</td></tr>`;
+                }
+            } catch(e) {
+                console.error("Erro ao carregar boletim:", e);
+                boletimTableBody.innerHTML = `<tr><td colspan="6">Erro ao carregar suas notas.</td></tr>`;
+            }
+        }
 
-                // Adiciona os nomes dos dias da semana novamente
-                const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-                dayNames.forEach(day => {
-                    const div = document.createElement('div');
-                    div.classList.add('calendar-day-name');
-                    div.textContent = day;
-                    calendarGrid.appendChild(div);
+        // --- Funcionalidade de Alterar Senha ---
+        const formAlterarSenha = document.getElementById('formAlterarSenha');
+        const senhaMessage = document.getElementById('senhaMessage');
+        formAlterarSenha.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+
+            senhaMessage.style.display = 'none';
+            if (newPassword !== confirmNewPassword) {
+                senhaMessage.textContent = 'A nova senha e a confirmação não coincidem.';
+                senhaMessage.className = 'error';
+                senhaMessage.style.display = 'block';
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:3000/alterar-senha', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
                 });
 
-                const firstDayOfMonth = new Date(year, month, 1);
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-                const firstDayOfWeek = firstDayOfMonth.getDay(); // 0 = Domingo, 6 = Sábado
+                const data = await response.json();
+                senhaMessage.className = response.ok ? 'success' : 'error';
+                senhaMessage.textContent = data.message || data.error;
+                if (response.ok) formAlterarSenha.reset();
+            } catch (err) {
+                senhaMessage.className = 'error';
+                senhaMessage.textContent = 'Erro de conexão ao alterar a senha.';
+            }
+            senhaMessage.style.display = 'block';
+        });
 
-                // Preenche os dias vazios antes do primeiro dia do mês
-                for (let i = 0; i < firstDayOfWeek; i++) {
-                    const div = document.createElement('div');
-                    div.classList.add('calendar-date');
-                    calendarGrid.appendChild(div);
-                }
+        // --- Funcionalidade de Calendário (Existente) ---
+        const currentMonthYearSpan = document.getElementById('currentMonthYear');
+        const calendarGrid = document.querySelector('#calendario .calendar-grid');
+        const prevMonthBtn = document.getElementById('prevMonthBtn');
+        const nextMonthBtn = document.getElementById('nextMonthBtn');
+        let currentMonth = new Date().getMonth();
+        let currentYear = new Date().getFullYear();
 
-                // Preenche os dias do mês
-                for (let day = 1; day <= daysInMonth; day++) {
-                    const div = document.createElement('div');
-                    div.classList.add('calendar-date');
-                    div.textContent = day;
-
-                    // Adiciona classe para dias do mês atual
-                    div.classList.add('current-month');
-
-                    // Marca o dia atual
-                    const today = new Date();
-                    if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
-                        div.classList.add('today');
-                    }
-
-                    // Exemplo de marcação de eventos (poderia vir de um backend)
-                    if ((month === 6 && day === 5) || (month === 6 && day === 15)) { // Exemplo: 5 e 15 de Julho
-                        div.classList.add('has-event');
-                    }
-
-                    calendarGrid.appendChild(div);
-                }
-
-                // Atualiza o mês e ano no cabeçalho
-                currentMonthYearSpan.textContent = new Date(year, month).toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
-            };
-
-            prevMonthBtn.addEventListener('click', () => {
-                currentMonth--;
-                if (currentMonth < 0) {
-                    currentMonth = 11;
-                    currentYear--;
-                }
-                renderCalendar(currentMonth, currentYear);
+        const renderCalendar = (month, year) => {
+            calendarGrid.innerHTML = '';
+            const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            dayNames.forEach(day => {
+                const div = document.createElement('div');
+                div.classList.add('calendar-day-name');
+                div.textContent = day;
+                calendarGrid.appendChild(div);
             });
-
-            nextMonthBtn.addEventListener('click', () => {
-                currentMonth++;
-                if (currentMonth > 11) {
-                    currentMonth = 0;
-                    currentYear++;
+            const firstDayOfMonth = new Date(year, month, 1);
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDayOfWeek = firstDayOfMonth.getDay();
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                calendarGrid.appendChild(document.createElement('div'));
+            }
+            for (let day = 1; day <= daysInMonth; day++) {
+                const div = document.createElement('div');
+                div.classList.add('calendar-date', 'current-month');
+                div.textContent = day;
+                const today = new Date();
+                if (day === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+                    div.classList.add('today');
                 }
-                renderCalendar(currentMonth, currentYear);
-            });
-
-            // Renderiza o calendário inicial
+                calendarGrid.appendChild(div);
+            }
+            currentMonthYearSpan.textContent = new Date(year, month).toLocaleString('pt-BR', { month: 'long', year: 'numeric' });
+        };
+        prevMonthBtn.addEventListener('click', () => {
+            currentMonth--;
+            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
             renderCalendar(currentMonth, currentYear);
         });
-    </script>
+        nextMonthBtn.addEventListener('click', () => {
+            currentMonth++;
+            if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            renderCalendar(currentMonth, currentYear);
+        });
+        renderCalendar(currentMonth, currentYear);
+        
+        // Carrega o boletim na primeira vez
+        loadBoletim();
+    });
+</script>
 </body>
 </html>
