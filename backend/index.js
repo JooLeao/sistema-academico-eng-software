@@ -14,11 +14,15 @@ const PORTA = 3000;
 // --- MIDDLEWARES ---
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname)); // Serve arquivos estáticos (HTML, CSS, JS, etc.)
 
-// Rota para a página inicial
+// ATENÇÃO: Esta é a linha CORRETA para servir arquivos estáticos da pasta 'public'.
+// Os arquivos que estavam em 'frontend/' no seu sistema local estarão em '/public/' dentro do container.
+app.use(express.static(__dirname + '/public')); 
+
+// Rota para a página inicial (index.html)
+// ATENÇÃO: O index.html agora é servido de dentro da pasta 'public' no container.
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/public/index.html');
 });
 
 // Configura a conexão com o banco de dados
@@ -314,7 +318,7 @@ app.get('/alunos/boletim', verificarTokenEAutorizacao, async (req, res) => {
             JOIN Disciplinas d ON t.disciplina_id = d.id
             WHERE m.aluno_id = $1 ORDER BY d.nome ASC;
         `;
-        const boletimResult = await client.query(boletimQuery, [alunoId]);
+        const boletimResult = await pool.query(boletimQuery, [alunoId]);
         res.status(200).json(boletimResult.rows);
     } catch (error) {
         console.error('Erro ao buscar boletim do aluno:', error);

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Senha - Sistema Acadêmico</title>
+    <link rel="stylesheet" href="/css/style-esqueceu-senha.css">
+    <link rel="icon" href="/imagens/logo-engenharia.png" type="image/png">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <img src="/imagens/logo-engenharia.png" alt="Logo Engenharia Software">
+                </div>
+                
+                <div class="institution-info">
+                    <div class="institution-name">SISTEMA ACADÊMICO</div>
+                    <div class="course-name">
+                        <span class="course-highlight">ENGENHARIA</span><br>DE SOFTWARE
+                    </div>
+                </div>
+            </div>
+            
+            <div class="welcome-text">
+                <h1>Recuperar Senha</h1>
+                <p>Não se preocupe! Vamos ajudá-lo a recuperar o acesso à sua conta</p>
+                
+                <div class="recovery-info">
+                    <h3>Como funciona?</h3>
+                    <p>Digite seu email cadastrado e enviaremos instruções detalhadas para redefinir sua senha de forma segura.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Esqueceu sua senha?</h2>
+                    <p class="form-subtitle">Digite seu email cadastrado para receber as instruções de recuperação</p>
+                    
+                    <div class="navigation-buttons">
+                        <a href="/login-aluno.html" class="nav-btn">
+                            <div class="nav-icon">
+                                <img src="/imagens/mini-logo.jpg" alt="Aluno">
+                            </div>
+                            Login Aluno
+                        </a>
+                        <a href="/login-professor.html" class="nav-btn">
+                            <div class="nav-icon">
+                                <img src="/imagens/mini-logo.jpg" alt="Professor">
+                            </div>
+                            Login Professor
+                        </a>
+                    </div>
+                </div>
+
+                <form id="recoveryForm">
+                    <div class="input-group">
+                        <label for="email">Email cadastrado</label>
+                        <input type="email" id="email" name="email" placeholder="Digite seu email" required>
+                    </div>
+                    <button type="submit" class="recovery-btn">Enviar Instruções</button>
+                </form>
+
+                <div class="back-to-login">
+                    <a href="/login-aluno.html">← Voltar ao login</a>
+                </div>
+
+                <div id="message"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const recoveryForm = document.getElementById('recoveryForm');
+        const messageElement = document.getElementById('message');
+        const container = document.querySelector('.container');
+        const formContainer = document.querySelector('.form-container');
+
+        recoveryForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            container.classList.add('loading');
+            
+            const email = event.target.email.value;
+            
+            // Limpar mensagens anteriores
+            messageElement.textContent = '';
+            messageElement.className = '';
+            messageElement.style.display = 'none';
+
+            try {
+                // Certifique-se de que o URL do backend está correto
+                const response = await fetch('http://localhost:3000/recuperar-senha', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+
+                container.classList.remove('loading');
+
+                if (response.ok) {
+                    // Sucesso - Email encontrado
+                    const data = await response.json();
+                    showSuccessState(email);
+                } else {
+                    // Erro - tratar todos os casos de erro
+                    let errorMessage = 'Não encontramos nenhuma conta cadastrada com este email. Verifique se digitou corretamente ou entre em contato com o suporte.';
+                    
+                    try {
+                        const data = await response.json();
+                        if (data.error) {
+                            errorMessage = data.error;
+                        }
+                    } catch (e) {
+                        // Se não conseguir fazer parse do JSON, usar mensagem padrão
+                    }
+                    
+                    messageElement.textContent = errorMessage;
+                    messageElement.classList.add('error');
+                    messageElement.style.display = 'block';
+                }
+            } catch (error) {
+                container.classList.remove('loading');
+                messageElement.textContent = 'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.';
+                messageElement.classList.add('error');
+                messageElement.style.display = 'block';
+            }
+        });
+
+        function showSuccessState(email) {
+            formContainer.innerHTML = `
+                <div class="form-header">
+                    <div class="success-icon">✓</div>
+                    <h2>Email Enviado!</h2>
+                    <p class="form-subtitle">Instruções de recuperação foram enviadas para:</p>
+                    <p style="font-weight: 600; color: #228B22; margin-bottom: 2rem;">${email}</p>
+                </div>
+                
+                <div id="message" class="info">
+                    <strong>Próximos passos:</strong><br>
+                    1. Verifique sua caixa de entrada (e spam)<br>
+                    2. Clique no link de recuperação<br>
+                    3. Defina sua nova senha<br><br>
+                    <em>O link expira em 1 hora por segurança.</em>
+                </div>
+
+                <div class="back-to-login" style="margin-top: 2rem;">
+                    <a href="/login-aluno.html">← Voltar ao login</a>
+                </div>
+
+                <div style="text-align: center; margin-top: 1rem;">
+                    <button onclick="location.reload()" style="background: none; border: none; color: #228B22; text-decoration: underline; cursor: pointer; font-size: 0.9rem;">
+                        Não recebeu o email? Tentar novamente
+                    </button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>

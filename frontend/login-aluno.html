@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Alunos - Sistema Acadêmico</title>
+    <link rel="stylesheet" href="/css/style-login-aluno.css">
+    <link rel="icon" href="/imagens/logo-engenharia.png" type="image/png">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="logo-section">
+                <div class="logo-container">
+                    <img src="/imagens/logo-engenharia.png" alt="Logo Engenharia Software">
+                </div>
+                
+                <div class="institution-info">
+                    <div class="institution-name">SISTEMA ACADÊMICO</div>
+                    <div class="course-name">
+                        <span class="course-highlight">ENGENHARIA</span><br>DE SOFTWARE
+                    </div>
+                </div>
+            </div>
+            
+            <div class="welcome-text">
+                <h1>Bem-vindo, Aluno!</h1>
+                <p>Acesse sua área acadêmica com suas credenciais estudantis</p>
+                
+                <div class="student-info">
+                    <h3>Portal do Estudante</h3>
+                    <p>Aqui você pode acessar suas notas, horários, materiais de aula e muito mais.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2>Login do Aluno</h2>
+                    <p class="form-subtitle">Entre com suas credenciais estudantis</p>
+                    
+                    <div class="teacher-login">
+                        <a href="/login-professor.html" class="teacher-btn">
+                            <div class="teacher-icon">
+                                <img src="/imagens/mini-logo.jpg" alt="Ícone Professor">
+                            </div>
+                            Área do Professor
+                        </a>
+                    </div>
+                    
+                    <div class="divider"></div> 
+                </div>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <input type="email" id="email" name="email" placeholder="Email estudantil" required>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="senha" name="senha" placeholder="Senha" required>
+                    </div>
+                    <button type="submit" class="login-btn">Entrar como Aluno</button>
+                </form>
+
+                <div class="forgot-password">
+                    <a href="/esqueceu-senha.html">Esqueceu sua senha?</a>
+                </div>
+
+                <p id="message"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const messageElement = document.getElementById('message');
+        const container = document.querySelector('.container');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            container.classList.add('loading');
+            
+            const email = event.target.email.value;
+            const senha = event.target.senha.value;
+            
+            messageElement.textContent = '';
+            messageElement.className = '';
+
+            try {
+                const response = await fetch('http://localhost:3000/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, senha })
+                });
+
+                const data = await response.json();
+                container.classList.remove('loading');
+
+                if (response.ok) {
+                    messageElement.textContent = 'Login realizado com sucesso!';
+                    messageElement.classList.add('success');
+                    // Armazena o token e o tipo de usuário no localStorage
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userType', data.usuario.tipo); 
+                    
+                    // Redireciona para a dashboard do aluno (caminho corrigido)
+                    setTimeout(() => {
+                        window.location.href = '/portal-aluno.html'; 
+                    }, 500); 
+                } else {
+                    messageElement.textContent = data.error || 'Credenciais inválidas.';
+                    messageElement.classList.add('error');
+                }
+            }
+             catch (error) {
+                container.classList.remove('loading');
+                messageElement.textContent = 'Não foi possível conectar ao servidor. Tente novamente mais tarde.';
+                messageElement.classList.add('error');
+            }
+        });
+    </script>
+</body>
+</html>
